@@ -1,25 +1,5 @@
-/**
- * API utility for making requests to the backend
- */
-
-import * as mockApi from "./mockApi";
-
-// Check if we should use mock API
-const useMockApi = process.env.NEXT_PUBLIC_USE_MOCK_API === "true";
-
-// Utility function to call either mock or real API
-const apiCall = async (mockFn, realFn, ...args) => {
-  if (useMockApi) {
-    console.log("[MOCK API]", mockFn.name);
-    return mockFn(...args);
-  } else {
-    console.log("[REAL API]", realFn.name);
-    return realFn(...args);
-  }
-};
-
 // Real API implementations
-const realFetchNearbyBusinesses = async (
+export const fetchNearbyBusinesses = async (
   lat,
   lng,
   radius,
@@ -45,7 +25,7 @@ const realFetchNearbyBusinesses = async (
   return response.json();
 };
 
-const realFetchBusinessById = async (id) => {
+export const fetchBusinessById = async (id) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/businesses/${id}`
   );
@@ -53,36 +33,7 @@ const realFetchBusinessById = async (id) => {
   return response.json();
 };
 
-// Export functions that will use either mock or real API
-export const fetchNearbyBusinesses = (...args) =>
-  apiCall(mockApi.fetchNearbyBusinesses, realFetchNearbyBusinesses, ...args);
-
-export const fetchBusinessById = (...args) =>
-  apiCall(mockApi.fetchBusinessById, realFetchBusinessById, ...args);
-
-export const fetchBusinessReviews = (...args) =>
-  apiCall(mockApi.fetchBusinessReviews, realFetchBusinessReviews, ...args);
-
-export const fetchUserFavorites = (...args) =>
-  apiCall(mockApi.fetchUserFavorites, realFetchUserFavorites, ...args);
-
-export const fetchUserReviews = (...args) =>
-  apiCall(mockApi.fetchUserReviews, realFetchUserReviews, ...args);
-
-export const submitReview = (...args) =>
-  apiCall(mockApi.submitReview, realSubmitReview, ...args);
-
-export const toggleFavorite = (...args) =>
-  apiCall(mockApi.toggleFavorite, realToggleFavorite, ...args);
-
-export const checkIsFavorite = (...args) =>
-  apiCall(mockApi.checkIsFavorite, realCheckIsFavorite, ...args);
-
-export const fetchUserBusinesses = (...args) =>
-  apiCall(mockApi.fetchUserBusinesses, realFetchUserBusinesses, ...args);
-
-// Define the remaining real API implementations
-const realFetchBusinessReviews = async (businessId) => {
+export const fetchBusinessReviews = async (businessId) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/businesses/${businessId}/reviews`
   );
@@ -90,23 +41,23 @@ const realFetchBusinessReviews = async (businessId) => {
   return response.json();
 };
 
-const realFetchUserFavorites = async () => {
+export const fetchUserFavorites = async () => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/favorites`
+    `${process.env.NEXT_PUBLIC_API_URL}/users/favorites`
   );
   if (!response.ok) throw new Error("Failed to fetch favorites");
   return response.json();
 };
 
-const realFetchUserReviews = async () => {
+export const fetchUserReviews = async () => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/reviews`
+    `${process.env.NEXT_PUBLIC_API_URL}/reviews/my-reviews`
   );
   if (!response.ok) throw new Error("Failed to fetch user reviews");
   return response.json();
 };
 
-const realSubmitReview = async (businessId, rating, comment) => {
+export const submitReview = async (businessId, rating, comment) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/businesses/${businessId}/reviews`,
     {
@@ -122,9 +73,9 @@ const realSubmitReview = async (businessId, rating, comment) => {
   return response.json();
 };
 
-const realToggleFavorite = async (businessId) => {
+export const toggleFavorite = async (businessId) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/favorites/${businessId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/users/favorites/${businessId}`,
     {
       method: "POST",
     }
@@ -134,18 +85,43 @@ const realToggleFavorite = async (businessId) => {
   return response.json();
 };
 
-const realCheckIsFavorite = async (businessId) => {
+export const checkIsFavorite = async (businessId) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/favorites/check/${businessId}`
+    `${process.env.NEXT_PUBLIC_API_URL}/users/favorites/check/${businessId}`
   );
   if (!response.ok) throw new Error("Failed to check favorite status");
   return response.json();
 };
 
-const realFetchUserBusinesses = async () => {
+export const fetchUserBusinesses = async () => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/businesses/owner`
   );
   if (!response.ok) throw new Error("Failed to fetch owned businesses");
   return response.json();
+};
+
+// Add this new function to fetch real business data from Google Places
+export const fetchRealBusinessesFromGooglePlaces = async (
+  lat,
+  lng,
+  radius,
+  category
+) => {
+  try {
+    // Call Google Places API through your backend proxy to protect API key
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/external/places?lat=${lat}&lng=${lng}&radius=${radius}&type=${category}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch places data");
+    }
+
+    const data = await response.json();
+    return data.results;
+  } catch (error) {
+    console.error("Error fetching from Google Places:", error);
+    throw error;
+  }
 };

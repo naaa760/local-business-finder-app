@@ -24,6 +24,14 @@ exports.getNearbyBusinesses = async (req, res) => {
   try {
     const { lat, lng, radius = 5, category, minRating = 0 } = req.query;
 
+    console.log("Search parameters:", {
+      lat,
+      lng,
+      radius,
+      category,
+      minRating,
+    });
+
     if (!lat || !lng) {
       return res
         .status(400)
@@ -34,6 +42,8 @@ exports.getNearbyBusinesses = async (req, res) => {
     const latitude = parseFloat(lat);
     const longitude = parseFloat(lng);
     const radiusInMeters = parseInt(radius) * 1000; // Convert km to meters
+
+    console.log("Using coordinates:", longitude, latitude);
 
     // Build the query
     let query = {
@@ -53,8 +63,24 @@ exports.getNearbyBusinesses = async (req, res) => {
       query.category = category;
     }
 
+    console.log("MongoDB query:", JSON.stringify(query));
+
+    // Get a count first
+    const count = await Business.countDocuments(query);
+    console.log(`Found ${count} businesses matching query before fetching`);
+
     // Execute the query
     const businesses = await Business.find(query).populate("reviews").limit(50);
+
+    console.log(`Found ${businesses.length} businesses in database`);
+
+    // Log the coordinates of the first few businesses for debugging
+    if (businesses.length > 0) {
+      console.log("Sample business coordinates:");
+      businesses.slice(0, 3).forEach((b) => {
+        console.log(`${b.name}: [${b.location.coordinates.join(", ")}]`);
+      });
+    }
 
     // Filter by rating if needed
     let results = businesses;
@@ -84,6 +110,7 @@ exports.getNearbyBusinesses = async (req, res) => {
 
     res.status(200).json(results);
   } catch (error) {
+    console.error("Error in getNearbyBusinesses:", error);
     res.status(500).json({ message: error.message });
   }
 };

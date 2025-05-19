@@ -21,8 +21,8 @@ router.get("/:businessId/reviews", getBusinessReviews);
 router.use(protect);
 
 // Business owner routes
-router.get("/owner", getMyBusinesses);
 router.post("/", restrictTo("business_owner", "admin"), createBusiness);
+router.get("/owner", getMyBusinesses);
 
 // Review routes
 router.post("/:businessId/reviews", submitReview);

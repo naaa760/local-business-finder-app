@@ -6,7 +6,10 @@ import { Search, Filter, Loader2 } from "lucide-react"; // You may need to insta
 import MapSearchBar from "@/components/MapSearchBar";
 import BusinessFilters from "@/components/BusinessFilters";
 import BusinessList from "@/components/BusinessList";
-import { fetchNearbyBusinesses } from "@/utils/api"; // Using our API helper
+import {
+  fetchNearbyBusinesses,
+  fetchRealBusinessesFromGooglePlaces,
+} from "@/utils/api"; // Using our API helper
 
 // Dynamic import of map component (client-side only)
 const MapComponent = dynamic(() => import("@/components/MapComponent"), {
@@ -49,18 +52,24 @@ export default function MapPage() {
     setError(null);
 
     try {
-      console.log("Searching businesses with filters:", filters);
-      const results = await fetchNearbyBusinesses(
+      // Call Google Places API instead of your database
+      const data = await fetchRealBusinessesFromGooglePlaces(
         location.lat,
         location.lng,
-        filters.radius,
-        filters.category,
-        filters.rating
+        filters.radius * 1000, // convert km to meters
+        filters.category === "all" ? "" : filters.category
       );
-      setBusinesses(results);
+
+      // Filter by rating if needed
+      const filteredData =
+        filters.rating > 0
+          ? data.filter((business) => business.rating >= filters.rating)
+          : data;
+
+      setBusinesses(filteredData);
     } catch (err) {
       console.error("Error searching businesses:", err);
-      setError("Failed to search businesses. Please try again.");
+      setError("Failed to load businesses. Please try again.");
     } finally {
       setLoading(false);
     }

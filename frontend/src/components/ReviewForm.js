@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { submitReview } from "@/utils/mockApi"; // Use mock API for now
+import { submitReview } from "@/utils/api";
 
 export default function ReviewForm({ businessId, onReviewSubmitted }) {
   const { isSignedIn } = useUser();

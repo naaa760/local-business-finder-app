@@ -10,6 +10,7 @@ const businessRoutes = require("./routes/businesses");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/users");
 const authRoutes = require("./routes/auth");
+const externalApiRoutes = require("./routes/externalApi");
 
 // Create Express app
 const app = express();
@@ -38,6 +39,7 @@ app.use("/api/businesses", businessRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/external", externalApiRoutes);
 
 // Database connection
 mongoose

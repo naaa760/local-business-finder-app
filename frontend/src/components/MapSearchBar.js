@@ -22,6 +22,7 @@ export default function MapSearchBar({ onLocationSelect }) {
 
       if (data && data.length > 0) {
         const { lat, lon } = data[0];
+        console.log("Found location:", { lat, lon });
         onLocationSelect({ lat: parseFloat(lat), lng: parseFloat(lon) });
       } else {
         alert("Location not found. Please try a different search term.");
