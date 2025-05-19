@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import { useUser } from "@clerk/nextjs";
 import ReviewForm from "@/components/ReviewForm";
 import { checkIsFavorite, toggleFavorite } from "@/utils/api";
+import ShareButtons from "@/components/ShareButtons";
 
 // Dynamic import for map component (client-side only)
 const BusinessLocationMap = dynamic(
@@ -25,6 +26,11 @@ export default function BusinessDetailPage() {
   const [reviews, setReviews] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
   const { isSignedIn } = useUser();
+
+  const currentUrl =
+    typeof window !== "undefined"
+      ? window.location.href
+      : `${process.env.NEXT_PUBLIC_SITE_URL}/business/${id}`;
 
   useEffect(() => {
     async function fetchData() {
@@ -267,6 +273,10 @@ export default function BusinessDetailPage() {
         </div>
       </div>
 
+      <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+        <ShareButtons business={business} url={currentUrl} />
+      </div>
+
       {/* Reviews section */}
       <div className="mt-8 bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">Reviews</h2>
@@ -303,6 +313,42 @@ export default function BusinessDetailPage() {
                       </div>
                     </div>
                     <p className="mt-3">{review.comment}</p>
+                    <div className="mt-3 flex items-center">
+                      <button
+                        onClick={() => {
+                          const reviewText = `"${review.comment}" - ${review.user.name}`;
+                          const shareText = `Review of ${business.name}: ${reviewText}`;
+
+                          if (navigator.share) {
+                            navigator
+                              .share({
+                                title: `Review of ${business.name}`,
+                                text: shareText,
+                                url: currentUrl,
+                              })
+                              .catch((err) =>
+                                console.log("Error sharing:", err)
+                              );
+                          } else {
+                            // Fallback for browsers that don't support navigator.share
+                            navigator.clipboard.writeText(
+                              `${shareText}\n\n${currentUrl}`
+                            );
+                            alert("Review copied to clipboard!");
+                          }
+                        }}
+                        className="text-sm text-gray-500 hover:text-blue-600 flex items-center"
+                      >
+                        <svg
+                          className="w-4 h-4 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path>
+                        </svg>
+                        Share this review
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
