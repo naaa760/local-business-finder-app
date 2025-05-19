@@ -52,7 +52,8 @@ export default function MapPage() {
     setError(null);
 
     try {
-      // Call Google Places API instead of your database
+      console.log("Searching with filters:", filters);
+      // Send the category to the backend
       const data = await fetchRealBusinessesFromGooglePlaces(
         location.lat,
         location.lng,
@@ -75,12 +76,12 @@ export default function MapPage() {
     }
   };
 
-  // Search when location or filters change
+  // Add this effect to trigger a new search when filters change
   useEffect(() => {
     if (location) {
       searchBusinesses();
     }
-  }, [location, filters]);
+  }, [filters, location]);
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">

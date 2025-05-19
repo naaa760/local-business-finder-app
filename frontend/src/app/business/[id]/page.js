@@ -5,14 +5,9 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import {
-  fetchBusinessById,
-  fetchBusinessReviews,
-  checkIsFavorite,
-  toggleFavorite,
-} from "@/utils/mockApi";
-import ReviewForm from "@/components/ReviewForm";
 import { useUser } from "@clerk/nextjs";
+import ReviewForm from "@/components/ReviewForm";
+import { checkIsFavorite, toggleFavorite } from "@/utils/api";
 
 // Dynamic import for map component (client-side only)
 const BusinessLocationMap = dynamic(
@@ -34,18 +29,30 @@ export default function BusinessDetailPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // Fetch business data
-        const businessData = await fetchBusinessById(id);
+        // Use the external API for place details
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/external/places/${id}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch business details");
+        }
+
+        const businessData = await response.json();
         setBusiness(businessData);
 
-        // Fetch reviews
-        const reviewsData = await fetchBusinessReviews(id);
-        setReviews(reviewsData);
+        // Set empty reviews array or use reviews from business data if available
+        setReviews(businessData.reviews || []);
 
         // Check if favorited (only if user is signed in)
         if (isSignedIn) {
-          const favoriteStatus = await checkIsFavorite(id);
-          setIsFavorite(favoriteStatus.isFavorite);
+          try {
+            const favoriteStatus = await checkIsFavorite(id);
+            setIsFavorite(favoriteStatus.isFavorite);
+          } catch (err) {
+            console.log("Could not check favorite status:", err);
+            // Don't fail the whole page load for this
+          }
         }
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -73,15 +80,17 @@ export default function BusinessDetailPage() {
   };
 
   const handleReviewSubmitted = async () => {
+    // Refresh business data to show the new review
     try {
-      const updatedReviews = await fetchBusinessReviews(id);
-      setReviews(updatedReviews);
-
-      // Refresh business data to get updated rating
-      const updatedBusiness = await fetchBusinessById(id);
-      setBusiness(updatedBusiness);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/external/places/${id}`
+      );
+      if (!response.ok) throw new Error("Failed to refresh business data");
+      const refreshedData = await response.json();
+      setBusiness(refreshedData);
+      setReviews(refreshedData.reviews || []);
     } catch (err) {
-      console.error("Error refreshing reviews:", err);
+      console.error("Error refreshing data:", err);
     }
   };
 
@@ -93,29 +102,12 @@ export default function BusinessDetailPage() {
     );
   }
 
-  if (error) {
+  if (error || !business) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-10 text-center">
         <h1 className="text-2xl font-bold text-red-600">Error</h1>
-        <p className="mt-4 text-gray-600">{error}</p>
-        <div className="mt-6">
-          <Link
-            href="/map"
-            className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Return to Map
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (!business) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-10 text-center">
-        <h1 className="text-2xl font-bold text-gray-800">Business Not Found</h1>
         <p className="mt-4 text-gray-600">
-          The business you are looking for does not exist.
+          {error || "Failed to load business details"}
         </p>
         <div className="mt-6">
           <Link
@@ -138,72 +130,64 @@ export default function BusinessDetailPage() {
       </div>
 
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        {/* Hero image */}
+        {/* Photo gallery/hero image */}
         <div className="relative h-64 bg-gray-200">
-          <div className="absolute inset-0 flex items-center justify-center text-gray-500">
-            <span>Business Image</span>
-          </div>
+          {business.photos && business.photos.length > 0 ? (
+            <Image
+              src={business.photos[0]}
+              alt={business.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              unoptimized={true}
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center bg-gray-200">
+              <span className="text-gray-400">No image available</span>
+            </div>
+          )}
         </div>
 
-        {/* Business info */}
         <div className="p-6">
-          <div className="flex justify-between items-start">
+          <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
                 {business.name}
               </h1>
-              <p className="text-sm text-gray-500 mt-1 capitalize">
+              <p className="text-gray-600 capitalize mt-1">
                 {business.category}
               </p>
-              <div className="flex items-center mt-2">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <span
-                      key={i}
-                      className={`text-lg ${
-                        i < Math.round(business.rating)
-                          ? "text-yellow-500"
-                          : "text-gray-300"
-                      }`}
-                    >
-                      ★
-                    </span>
-                  ))}
-                </div>
-                <span className="ml-2 text-sm text-gray-600">
-                  {business.rating.toFixed(1)} ({business.reviewCount} reviews)
-                </span>
-              </div>
             </div>
-            <button
-              onClick={handleToggleFavorite}
-              className={`p-2 rounded-full ${
-                isFavorite
-                  ? "text-red-500 hover:bg-red-100"
-                  : "text-gray-400 hover:bg-gray-100"
-              }`}
-              title={isFavorite ? "Remove from favorites" : "Add to favorites"}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill={isFavorite ? "currentColor" : "none"}
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
-            </button>
+
+            <div className="flex items-center">
+              <div className="flex items-center mr-2">
+                {[...Array(5)].map((_, i) => (
+                  <span
+                    key={i}
+                    className={`text-xl ${
+                      i < Math.round(business.rating)
+                        ? "text-yellow-500"
+                        : "text-gray-300"
+                    }`}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <span className="text-gray-500">
+                ({business.reviewCount} reviews)
+              </span>
+            </div>
           </div>
 
-          <p className="mt-4 text-gray-700">{business.description}</p>
+          <div className="mt-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-2">
+              About this Business
+            </h2>
+            <p className="text-gray-600">{business.description}</p>
+          </div>
 
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-3">
                 Contact Information
@@ -230,9 +214,9 @@ export default function BusinessDetailPage() {
                       href={business.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800"
+                      className="text-blue-600 hover:underline"
                     >
-                      {business.website}
+                      {business.website.replace(/^https?:\/\//, "")}
                     </a>
                   </p>
                 )}
@@ -243,16 +227,18 @@ export default function BusinessDetailPage() {
               <h2 className="text-lg font-semibold text-gray-800 mb-3">
                 Business Hours
               </h2>
-              <div className="space-y-1">
-                {Object.entries(business.hours).map(([day, hours]) => (
-                  <div key={day} className="flex">
-                    <span className="w-24 text-gray-600 capitalize">
-                      {day}:
-                    </span>
-                    <span className="text-gray-800">{hours || "Closed"}</span>
-                  </div>
-                ))}
-              </div>
+              {business.hours && (
+                <div className="grid grid-cols-1 gap-1">
+                  {Object.entries(business.hours).map(([day, hours]) => (
+                    <div key={day} className="flex">
+                      <span className="w-28 capitalize font-medium">
+                        {day}:
+                      </span>
+                      <span className="text-gray-600">{hours}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -280,9 +266,9 @@ export default function BusinessDetailPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
-            {reviews.length > 0 ? (
+            {business.reviews && business.reviews.length > 0 ? (
               <div className="space-y-6">
-                {reviews.map((review) => (
+                {business.reviews.map((review) => (
                   <div
                     key={review._id}
                     className="border-b border-gray-200 pb-6 last:border-0"
