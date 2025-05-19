@@ -65,6 +65,12 @@ export default function BusinessDetailPage() {
     fetchData();
   }, [id, isSignedIn]);
 
+  useEffect(() => {
+    if (business && business.photos) {
+      console.log("Business photos:", business.photos);
+    }
+  }, [business]);
+
   const handleToggleFavorite = async () => {
     if (!isSignedIn) {
       // Prompt to sign in
@@ -79,8 +85,11 @@ export default function BusinessDetailPage() {
     }
   };
 
-  const handleReviewSubmitted = async () => {
-    // Refresh business data to show the new review
+  const handleReviewSubmitted = async (newReview) => {
+    // Add the new review to the existing reviews immediately
+    setReviews([newReview, ...reviews]);
+
+    // Also refresh business data to make sure we have the latest state
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/external/places/${id}`
@@ -88,7 +97,6 @@ export default function BusinessDetailPage() {
       if (!response.ok) throw new Error("Failed to refresh business data");
       const refreshedData = await response.json();
       setBusiness(refreshedData);
-      setReviews(refreshedData.reviews || []);
     } catch (err) {
       console.error("Error refreshing data:", err);
     }
@@ -133,14 +141,13 @@ export default function BusinessDetailPage() {
         {/* Photo gallery/hero image */}
         <div className="relative h-64 bg-gray-200">
           {business.photos && business.photos.length > 0 ? (
-            <Image
-              src={business.photos[0]}
-              alt={business.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              unoptimized={true}
-            />
+            <div className="h-full w-full">
+              <img
+                src={business.photos[0]}
+                alt={business.name}
+                className="h-full w-full object-cover"
+              />
+            </div>
           ) : (
             <div className="flex h-full items-center justify-center bg-gray-200">
               <span className="text-gray-400">No image available</span>

@@ -6,9 +6,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "maps.googleapis.com",
-        pathname: "/maps/api/place/photo**",
+        pathname: "/**",
       },
     ],
+    unoptimized: true,
   },
   reactStrictMode: true,
 };

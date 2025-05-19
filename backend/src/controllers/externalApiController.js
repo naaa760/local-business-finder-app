@@ -1,4 +1,5 @@
 const axios = require("axios");
+const PlaceReview = require("../models/PlaceReview");
 
 // Google Places API proxy
 exports.getPlacesNearby = async (req, res) => {
@@ -73,69 +74,88 @@ exports.getPlaceDetails = async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (!id) {
-      return res.status(400).json({ message: "Place ID is required" });
-    }
-
-    const response = await axios.get(
-      `https://maps.googleapis.com/maps/api/place/details/json`,
-      {
+    // Get both Google place details and user reviews from our DB
+    const [placeResponse, userReviews] = await Promise.all([
+      axios.get(`https://maps.googleapis.com/maps/api/place/details/json`, {
         params: {
           place_id: id,
           fields:
-            "name,formatted_address,formatted_phone_number,website,photos,opening_hours,rating,reviews,types,url",
+            "name,rating,formatted_phone_number,formatted_address,geometry,opening_hours,photos,website,vicinity,types,reviews",
           key: process.env.GOOGLE_PLACES_API_KEY,
         },
-      }
-    );
+      }),
+      PlaceReview.find({ placeId: id }).sort({ createdAt: -1 }),
+    ]);
 
-    if (!response.data.result) {
+    if (!placeResponse.data.result) {
       return res.status(404).json({ message: "Place not found" });
     }
 
-    const place = response.data.result;
+    const place = placeResponse.data.result;
 
-    // Format the place details to match your business model structure
-    const formattedBusiness = {
-      _id: place.place_id,
-      name: place.name,
-      category: mapGoogleTypeToAppCategory(place.types[0]),
-      description: `${place.name} is located at ${place.formatted_address}`,
-      address: place.formatted_address,
-      phone: place.formatted_phone_number || "",
-      website: place.website || "",
-      rating: place.rating || 0,
-      reviewCount: place.reviews ? place.reviews.length : 0,
-      location: {
-        coordinates: [
-          place.geometry ? place.geometry.location.lng : 0,
-          place.geometry ? place.geometry.location.lat : 0,
-        ],
+    // Format user reviews from our database
+    const formattedUserReviews = userReviews.map((review) => ({
+      _id: review._id,
+      rating: review.rating,
+      comment: review.comment,
+      createdAt: review.createdAt,
+      user: {
+        name: review.userName,
+        _id: review.userId,
       },
-      reviews: place.reviews
+    }));
+
+    // Combine Google reviews with our user reviews
+    const allReviews = [
+      ...formattedUserReviews,
+      // Comment out the Google reviews if you don't want them
+      /*
+      ...(place.reviews
         ? place.reviews.map((review) => ({
-            _id: review.time,
+            _id: `google-review-${review.time}`,
             rating: review.rating,
             comment: review.text,
+            createdAt: new Date(review.time * 1000).toISOString(),
             user: {
               name: review.author_name,
-              profilePicture: review.profile_photo_url,
+              _id: `google-user-${review.author_name
+                .replace(/\s+/g, "-")
+                .toLowerCase()}`,
             },
-            createdAt: new Date(review.time * 1000).toISOString(),
           }))
-        : [],
+        : []),
+      */
+    ];
+
+    // Format place details as before
+    const business = {
+      _id: id,
+      name: place.name,
+      category: mapGoogleTypeToAppCategory(place.types[0]),
+      description: `${place.name} is located at ${
+        place.vicinity || place.formatted_address
+      }`,
+      address: place.vicinity || place.formatted_address,
+      phone: place.formatted_phone_number,
+      website: place.website,
+      rating: place.rating || 0,
+      reviewCount: place.user_ratings_total || 0,
+      location: {
+        coordinates: [place.geometry.location.lng, place.geometry.location.lat],
+      },
       photos: place.photos
-        ? place.photos
-            .slice(0, 5)
-            .map(
-              (photo) =>
-                `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${photo.photo_reference}&key=${process.env.GOOGLE_PLACES_API_KEY}`
-            )
+        ? place.photos.map(
+            (photo) =>
+              `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${photo.photo_reference}&key=${process.env.GOOGLE_PLACES_API_KEY}`
+          )
         : [],
-      hours: formatOpeningHours(place.opening_hours),
+      hours: place.opening_hours
+        ? formatOpeningHours(place.opening_hours)
+        : null,
+      reviews: allReviews,
     };
 
-    res.status(200).json(formattedBusiness);
+    res.status(200).json(business);
   } catch (error) {
     console.error("Error fetching place details:", error);
     res.status(500).json({ message: error.message });
@@ -223,3 +243,52 @@ function mapGoogleTypeToAppCategory(googleType) {
 
   return typeMap[googleType] || "service"; // Default to service
 }
+
+// Add this function to your externalApiController.js
+exports.addReviewToPlace = async (req, res) => {
+  try {
+    const { businessId } = req.params;
+    const { rating, comment, userName } = req.body;
+
+    console.log("Adding review to place:", {
+      businessId,
+      rating,
+      comment,
+      userName,
+    });
+
+    if (!businessId || !rating || !comment) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // Create and save the review to the database
+    const newReview = new PlaceReview({
+      placeId: businessId,
+      userName: userName || "Anonymous User",
+      userId: req.user?._id || `temp-user-${Date.now()}`,
+      rating: parseInt(rating),
+      comment,
+    });
+
+    await newReview.save();
+    console.log("Saved review to database:", newReview);
+
+    // Return a formatted review object for the frontend
+    const formattedReview = {
+      _id: newReview._id,
+      business: businessId,
+      rating: newReview.rating,
+      comment: newReview.comment,
+      createdAt: newReview.createdAt,
+      user: {
+        name: newReview.userName,
+        _id: newReview.userId,
+      },
+    };
+
+    res.status(201).json(formattedReview);
+  } catch (error) {
+    console.error("Error adding review:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
