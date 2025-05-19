@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 3001;
 app.use(helmet());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials: true,
   })
 );
@@ -34,6 +34,11 @@ const limiter = rateLimit({
 });
 app.use("/api", limiter);
 
+// Root route for health check
+app.get("/", (req, res) => {
+  res.status(200).json({ status: "API is running" });
+});
+
 // API routes
 app.use("/api/businesses", businessRoutes);
 app.use("/api/reviews", reviewRoutes);
@@ -42,14 +47,25 @@ app.use("/api/auth", authRoutes);
 app.use("/api/external", externalApiRoutes);
 
 // Database connection
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected to MongoDB");
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  })
-  .catch((err) => {
+
+    // Only start listening after successful connection
+    if (process.env.NODE_ENV !== "production") {
+      app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+      });
+    }
+  } catch (err) {
     console.error("MongoDB connection error:", err);
-  });
+    process.exit(1); // Exit with failure
+  }
+};
+
+// Connect to database
+connectDB();
+
+// Export for Vercel
+module.exports = app;
