@@ -12,6 +12,9 @@ const nextConfig = {
     unoptimized: true,
   },
   reactStrictMode: true,
+  experimental: {
+    serverComponentsExternalPackages: ["sharp"],
+  },
 };
 
 module.exports = nextConfig;

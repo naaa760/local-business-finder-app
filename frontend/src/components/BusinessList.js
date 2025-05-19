@@ -1,6 +1,8 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
+import BusinessCard from "./BusinessCard";
 
 // Function to calculate distance between two coordinates
 function getDistance(lat1, lon1, lat2, lon2) {
@@ -20,16 +22,16 @@ function getDistance(lat1, lon1, lat2, lon2) {
 export default function BusinessList({ businesses, loading, userLocation }) {
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-full">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+      <div className="flex justify-center items-center h-full p-6">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-600"></div>
       </div>
     );
   }
 
   if (businesses.length === 0) {
     return (
-      <div className="text-center py-10">
-        <p className="text-gray-500">No businesses found in this area.</p>
+      <div className="text-center py-10 px-6">
+        <p className="text-gray-600">No businesses found in this area.</p>
         <p className="text-gray-500 text-sm mt-2">
           Try adjusting your filters or search radius.
         </p>
@@ -38,71 +40,14 @@ export default function BusinessList({ businesses, loading, userLocation }) {
   }
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Businesses Near You</h2>
-      <div className="space-y-4">
-        {businesses.map((business) => {
-          // Calculate distance if user location is available
-          const distance = userLocation
-            ? getDistance(
-                userLocation.lat,
-                userLocation.lng,
-                business.location.coordinates[1],
-                business.location.coordinates[0]
-              ).toFixed(1)
-            : null;
-
-          return (
-            <div
-              key={business._id}
-              className="border rounded-lg p-4 hover:shadow-md transition-shadow"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-bold text-lg">{business.name}</h3>
-                  <p className="text-sm text-gray-600 capitalize">
-                    {business.category}
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <span
-                      key={i}
-                      className={`text-sm ${
-                        i < Math.round(business.rating)
-                          ? "text-yellow-500"
-                          : "text-gray-300"
-                      }`}
-                    >
-                      ★
-                    </span>
-                  ))}
-                  <span className="ml-1 text-xs text-gray-500">
-                    ({business.reviewCount || 0})
-                  </span>
-                </div>
-              </div>
-
-              {distance && (
-                <p className="text-sm text-gray-600 mt-1">{distance} km away</p>
-              )}
-
-              <p className="text-sm mt-2 line-clamp-2">
-                {business.description}
-              </p>
-
-              <div className="mt-3">
-                <Link
-                  href={`/business/${business._id}`}
-                  className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                >
-                  View Details →
-                </Link>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+    <div className="divide-y divide-gray-100/20">
+      {businesses.map((business) => (
+        <BusinessCard
+          key={business.place_id || business._id}
+          business={business}
+          userLocation={userLocation}
+        />
+      ))}
     </div>
   );
 }
