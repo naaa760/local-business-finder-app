@@ -204,6 +204,13 @@ export default function HomePage() {
             </div>
           </motion.div>
 
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+
           {/* Featured places */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -433,62 +440,6 @@ export default function HomePage() {
                 >
                   View All Categories
                 </button>
-              </div>
-            </div>
-          </div>
-
-          {/* ===== NEW SECTION: STATISTICS/METRICS ===== */}
-          <div className="py-16 bg-gray-900 text-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  viewport={{ once: true }}
-                  className="text-center"
-                >
-                  <div className="text-4xl font-bold text-amber-400 mb-2">
-                    10,000+
-                  </div>
-                  <div className="text-gray-300">Local Businesses</div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  viewport={{ once: true }}
-                  className="text-center"
-                >
-                  <div className="text-4xl font-bold text-amber-400 mb-2">
-                    50+
-                  </div>
-                  <div className="text-gray-300">Cities Covered</div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  viewport={{ once: true }}
-                  className="text-center"
-                >
-                  <div className="text-4xl font-bold text-amber-400 mb-2">
-                    25,000+
-                  </div>
-                  <div className="text-gray-300">User Reviews</div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.6 }}
-                  viewport={{ once: true }}
-                  className="text-center"
-                >
-                  <div className="text-4xl font-bold text-amber-400 mb-2">
-                    4.8
-                  </div>
-                  <div className="text-gray-300">Average Rating</div>
-                </motion.div>
               </div>
             </div>
           </div>
