@@ -166,116 +166,110 @@ export default function MapPage() {
 
         {/* Beautiful Search Section */}
         <div className="mb-8 max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 text-center mb-3">
-            Discover Local Businesses
-          </h1>
-          <p className="text-gray-600 text-center mb-8">
-            Find the best places around you, from restaurants to services
-          </p>
-
-          {/* Search Bar and Buttons */}
-          <div className="flex items-center gap-3">
-            {/* Search Input with Better Icon Alignment */}
-            <div className="flex-1 relative">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none z-10">
-                <MapPin className="w-5 h-5 text-gray-400" strokeWidth={2} />
-              </div>
-              <MapSearchBar
-                onLocationSelect={setLocation}
-                placeholder="Search for a location..."
-                className="w-full h-12 pl-11 pr-4 rounded-full border border-gray-200 
-                  bg-white shadow-sm transition-all hover:shadow-md focus:outline-none 
-                  focus:ring-2 focus:ring-black/5 focus:border-gray-300 text-gray-700
-                  placeholder:text-gray-400"
-              />
-            </div>
-
-            {/* Use My Location Button - Keep only this one */}
-            <Button
-              variant="outline"
-              className="h-12 px-6 rounded-full border border-gray-200 text-gray-700 
-                hover:bg-gray-50 hover:border-gray-300 transition-all whitespace-nowrap"
-              onClick={() => {
-                if (navigator.geolocation) {
-                  navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                      const { latitude, longitude } = position.coords;
-                      setLocation({ lat: latitude, lng: longitude });
-                    },
-                    (error) => {
-                      console.error("Error getting location:", error);
-                      // Default to a common location if geolocation fails
-                      setLocation({ lat: 40.7128, lng: -74.006 }); // New York
-                    }
-                  );
-                }
-              }}
-            >
-              Use My Location
-            </Button>
-
-            {/* Black Search Button */}
-            <Button
-              variant="default"
-              className="h-12 px-8 rounded-full bg-black hover:bg-gray-900 text-white 
-                shadow-md hover:shadow-lg transition-all duration-200"
-              onClick={searchBusinesses}
-            >
-              Search
-            </Button>
+          <div className="text-center mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+              Discover Local Businesses
+            </h1>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+              Find the best places around you, from restaurants to services
+            </p>
           </div>
 
-          {/* Filters Row with Rounded Corners */}
-          <div className="flex justify-center gap-4 mt-4">
-            <select
-              value={filters.category}
-              onChange={(e) =>
-                setFilters((prev) => ({ ...prev, category: e.target.value }))
-              }
-              className="h-10 px-4 rounded-full border border-gray-200 bg-white text-gray-700
-                focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300"
-            >
-              <option value="all">All Categories</option>
-              <option value="restaurant">Restaurants</option>
-              <option value="cafe">Cafes</option>
-              <option value="retail">Retail</option>
-              <option value="service">Services</option>
-              <option value="store">Stores</option>
-            </select>
+          {/* Search Bar and Button Group in Card */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-white/50">
+            {/* Search Input and Buttons Row */}
+            <div className="flex flex-col md:flex-row items-center gap-4 mb-5">
+              {/* Search Input with Icon Alignment */}
+              <div className="relative w-full md:w-auto md:flex-1">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-10"></div>
+                <MapSearchBar
+                  onLocationSelect={setLocation}
+                  placeholder="Search for a location..."
+                  className="w-full h-12 pl-12 pr-4 rounded-full border border-amber-200/50 
+                    bg-white/90 shadow-sm transition-all hover:shadow-md focus:outline-none 
+                    focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 text-gray-700
+                    placeholder:text-gray-400"
+                />
+              </div>
 
-            <select
-              value={filters.rating}
-              onChange={(e) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  rating: Number(e.target.value),
-                }))
-              }
-              className="h-10 px-4 rounded-full border border-gray-200 bg-white text-gray-700
-                focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300"
-            >
-              <option value="0">Any Rating</option>
-              <option value="3">3+ Stars</option>
-              <option value="4">4+ Stars</option>
-              <option value="4.5">4.5+ Stars</option>
-            </select>
+              {/* Only ONE Location Button */}
+              <Button
+                variant="outline"
+                className="h-12 px-5 rounded-full border border-amber-200/70 text-amber-700 
+                  bg-amber-50/70 hover:bg-amber-100/70 hover:border-amber-300 transition-all 
+                  whitespace-nowrap flex items-center gap-2 flex-shrink-0"
+                onClick={() => {
+                  if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                      (position) => {
+                        const { latitude, longitude } = position.coords;
+                        setLocation({ lat: latitude, lng: longitude });
+                      },
+                      (error) => {
+                        console.error("Error getting location:", error);
+                        setLocation({ lat: 40.7128, lng: -74.006 }); // New York
+                      }
+                    );
+                  }
+                }}
+              >
+                <MapPin className="w-4 h-4" />
+                My Location
+              </Button>
+            </div>
 
-            <select
-              value={filters.radius}
-              onChange={(e) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  radius: Number(e.target.value),
-                }))
-              }
-              className="h-10 px-4 rounded-full border border-gray-200 bg-white text-gray-700
-                focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300"
-            >
-              <option value="5">5 km</option>
-              <option value="10">10 km</option>
-              <option value="20">20 km</option>
-              <option value="50">50 km</option>
-            </select>
+            {/* Filters Row with Improved Styling */}
+            <div className="flex flex-wrap justify-center gap-3">
+              <select
+                value={filters.category}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, category: e.target.value }))
+                }
+                className="h-10 px-4 rounded-full border border-amber-200/50 bg-white/80 text-gray-700
+                  focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400"
+              >
+                <option value="all">All Categories</option>
+                <option value="restaurant">Restaurants</option>
+                <option value="cafe">Cafes</option>
+                <option value="retail">Retail</option>
+                <option value="service">Services</option>
+                <option value="store">Stores</option>
+              </select>
+
+              <select
+                value={filters.rating}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    rating: Number(e.target.value),
+                  }))
+                }
+                className="h-10 px-4 rounded-full border border-amber-200/50 bg-white/80 text-gray-700
+                  focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400"
+              >
+                <option value="0">Any Rating</option>
+                <option value="3">3+ Stars</option>
+                <option value="4">4+ Stars</option>
+                <option value="4.5">4.5+ Stars</option>
+              </select>
+
+              <select
+                value={filters.radius}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    radius: Number(e.target.value),
+                  }))
+                }
+                className="h-10 px-4 rounded-full border border-amber-200/50 bg-white/80 text-gray-700
+                  focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400"
+              >
+                <option value="5">5 km</option>
+                <option value="10">10 km</option>
+                <option value="20">20 km</option>
+                <option value="50">50 km</option>
+              </select>
+            </div>
           </div>
         </div>
 
