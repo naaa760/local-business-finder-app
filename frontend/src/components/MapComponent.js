@@ -442,7 +442,7 @@ export default function MapComponent({
   );
 }
 
-// Helper function to get category color classes
+// Helper function to get category color classes - add consistent categories
 function getCategoryColorClass(category) {
   const colors = {
     restaurant: "from-rose-500 to-orange-500",

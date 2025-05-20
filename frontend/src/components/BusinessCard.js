@@ -36,7 +36,7 @@ export default function BusinessCard({
   // Get business ID from place_id or _id
   const businessId = business.place_id || business._id;
 
-  // Determine category color
+  // Determine category color - ensure all categories are included
   const getCategoryColor = (category) => {
     const colors = {
       restaurant: "from-rose-500 to-orange-500",
@@ -54,7 +54,7 @@ export default function BusinessCard({
       <motion.div
         whileHover={{ y: -4 }}
         transition={{ duration: 0.2 }}
-        className="p-4 border border-amber-100 hover:border-amber-200 bg-white hover:bg-amber-50/50 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md"
+        className="p-4 border border-amber-100 hover:border-amber-200 bg-white hover:bg-amber-50/50 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md h-full"
       >
         <div className="flex flex-col h-full">
           {/* Business Image with gorgeous styling */}
@@ -95,64 +95,65 @@ export default function BusinessCard({
 
           {/* Business details */}
           <div className="flex-grow flex flex-col">
-            <h3 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-1">
+            <h3 className="text-base font-semibold text-gray-800 mb-1 line-clamp-1">
               {business.name}
             </h3>
 
-            {/* Rating stars */}
-            {business.rating > 0 && (
-              <div className="flex items-center mb-2">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3, delay: i * 0.05 }}
-                    >
-                      <Star
-                        size={16}
-                        className={`${
-                          i < Math.floor(business.rating)
-                            ? "text-amber-400 fill-amber-400"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    </motion.div>
+            {/* Rating */}
+            {business.rating && (
+              <div className="flex items-center mb-1.5">
+                <div className="flex items-center">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      size={14}
+                      className={`${
+                        star <= Math.round(business.rating)
+                          ? "text-amber-400 fill-amber-400"
+                          : "text-gray-300"
+                      } mr-0.5`}
+                    />
                   ))}
                 </div>
-                <span className="ml-2 text-sm font-medium text-gray-700">
-                  {business.rating.toFixed(1)} (
-                  {business.user_ratings_total || business.reviewCount || 0})
+                <span className="ml-1.5 text-xs text-gray-600">
+                  ({business.user_ratings_total || business.reviewCount || 0})
                 </span>
               </div>
             )}
 
             {/* Address with icon */}
-            <div className="flex items-center mt-auto text-sm text-gray-600">
-              <MapPin size={14} className="mr-1 text-amber-500 flex-shrink-0" />
-              <span className="line-clamp-1">
+            <div className="flex items-start mt-0.5 text-sm text-gray-600 mb-2">
+              <MapPin
+                size={14}
+                className="mr-1 text-amber-500 mt-0.5 flex-shrink-0"
+              />
+              <span className="line-clamp-2 text-xs">
                 {business.vicinity ||
                   business.formatted_address ||
                   business.address}
               </span>
             </div>
 
-            {/* Action buttons */}
-            <div className="mt-3 flex space-x-2">
+            {/* Spacer to push button to bottom */}
+            <div className="flex-grow"></div>
+
+            {/* Action buttons - redesigned for better layout */}
+            <div className="mt-2 flex space-x-2">
               <Link href={`/business/${businessId}`} className="flex-1">
                 <Button
                   variant="default"
-                  className="w-full h-8 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-md"
+                  size="sm"
+                  className="w-full h-7 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-sm text-xs font-medium rounded-lg"
                 >
                   View Details
                 </Button>
               </Link>
               <Button
                 variant="outline"
-                className="h-8 w-8 rounded-full border-amber-200 text-amber-500 hover:text-amber-600 hover:bg-amber-50"
+                size="sm"
+                className="h-7 w-7 rounded-full border-amber-200 text-amber-500 hover:text-amber-600 hover:bg-amber-50 p-0 flex items-center justify-center"
               >
-                <Heart size={16} />
+                <Heart size={14} />
               </Button>
             </div>
           </div>
@@ -166,7 +167,7 @@ export default function BusinessCard({
     <motion.div
       whileHover={{ x: 4 }}
       transition={{ duration: 0.2 }}
-      className="p-3 hover:bg-amber-50/60 transition-colors duration-300 border-b border-amber-50 last:border-b-0"
+      className="p-3 hover:bg-amber-50/50 transition-all duration-300 rounded-lg"
     >
       <div className="flex gap-4">
         {/* Business thumbnail */}

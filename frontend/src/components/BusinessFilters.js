@@ -8,6 +8,16 @@ export default function BusinessFilters({ filters, setFilters }) {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Define consistent categories
+  const categories = [
+    { value: "all", label: "All Categories" },
+    { value: "restaurant", label: "Restaurants" },
+    { value: "retail", label: "Retail" },
+    { value: "service", label: "Services" },
+    { value: "entertainment", label: "Entertainment" },
+    { value: "health", label: "Health & Wellness" },
+  ];
+
   return (
     <div className="bg-white p-4 rounded-xl shadow-lg border border-amber-50 mb-4">
       <div className="flex items-center mb-4">
@@ -32,12 +42,11 @@ export default function BusinessFilters({ filters, setFilters }) {
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent text-gray-700 text-sm bg-gray-50"
           >
-            <option value="all">All Categories</option>
-            <option value="restaurant">Restaurants</option>
-            <option value="retail">Retail</option>
-            <option value="service">Services</option>
-            <option value="entertainment">Entertainment</option>
-            <option value="health">Health & Wellness</option>
+            {categories.map((category) => (
+              <option key={category.value} value={category.value}>
+                {category.label}
+              </option>
+            ))}
           </select>
         </div>
 
