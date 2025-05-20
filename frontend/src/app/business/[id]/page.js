@@ -86,10 +86,23 @@ export default function BusinessDetailPage() {
     }
 
     try {
+      // Optimistically update the UI first
+      setIsFavorite((prev) => !prev);
+
+      // Then make the API call
       const result = await toggleFavorite(id);
-      setIsFavorite(result.isFavorite);
+
+      // If there's a mismatch, sync with the server's response
+      if (result.isFavorite !== undefined && result.isFavorite !== isFavorite) {
+        setIsFavorite(result.isFavorite);
+      }
     } catch (err) {
+      // Revert the optimistic update on error
+      setIsFavorite((prev) => !prev);
       console.error("Error toggling favorite:", err);
+
+      // Show user-friendly error message
+      alert(`Could not update favorite status: ${err.message}`);
     }
   };
 

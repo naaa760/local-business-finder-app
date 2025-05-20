@@ -76,24 +76,31 @@ export const submitReview = async (businessId, rating, comment) => {
 export const toggleFavorite = async (businessId) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/businesses/${businessId}/favorite/toggle`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/favorites/${businessId}`,
       {
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       }
     );
 
     if (!response.ok) {
-      console.error("Failed to toggle favorite");
-      throw new Error("Failed to toggle favorite");
+      console.error(
+        `Failed to toggle favorite: ${response.status} ${response.statusText}`
+      );
+      throw new Error(`Failed to toggle favorite: ${response.statusText}`);
     }
 
     return response.json();
   } catch (error) {
     console.error("Error toggling favorite:", error);
+
+    if (error.message.includes("Failed to fetch")) {
+      throw new Error("Network error. Please check your connection.");
+    }
+
     throw error;
   }
 };
@@ -101,28 +108,25 @@ export const toggleFavorite = async (businessId) => {
 export const checkIsFavorite = async (businessId) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/businesses/${businessId}/favorite/check`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/favorites/check/${businessId}`,
       {
-        credentials: "include", // Important for auth cookies
+        credentials: "include",
       }
     );
 
-    // If not authenticated, just return not favorite instead of error
     if (response.status === 401) {
       return { isFavorite: false };
     }
 
     if (!response.ok) {
-      console.warn(
-        "Failed to check favorite status, defaulting to not favorite"
-      );
+      console.warn(`Failed to check favorite status: ${response.status}`);
       return { isFavorite: false };
     }
 
     return response.json();
   } catch (error) {
     console.error("Error checking favorite status:", error);
-    return { isFavorite: false }; // Default to not favorite on error
+    return { isFavorite: false };
   }
 };
 
