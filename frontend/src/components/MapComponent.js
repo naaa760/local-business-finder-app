@@ -101,14 +101,14 @@ export default function MapComponent({
   // Different map styles for user to choose from
   const mapStyles = {
     light: {
-      url: "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png",
+      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
-        '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>',
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     },
     dark: {
-      url: "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
+      url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
       attribution:
-        '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>',
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     },
     satellite: {
       url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -116,9 +116,14 @@ export default function MapComponent({
         "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
     },
     outdoor: {
-      url: "https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=6170aad10dfd42a38d4d8c709a536f38",
+      url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
       attribution:
-        '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+    },
+    colorful: {
+      url: "https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
+      attribution:
+        '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     },
   };
 
@@ -235,20 +240,57 @@ export default function MapComponent({
   return (
     <div className="relative w-full h-full rounded-2xl overflow-hidden">
       {/* Map style selector */}
-      <div className="absolute top-4 right-4 z-[1000] bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg border border-white/20 flex gap-2">
-        {Object.keys(mapStyles).map((style) => (
-          <button
-            key={style}
-            onClick={() => setMapStyle(style)}
-            className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
-              mapStyle === style
-                ? "bg-amber-500 text-white"
-                : "bg-white/50 text-gray-700 hover:bg-gray-100"
-            }`}
-          >
-            {style.charAt(0).toUpperCase() + style.slice(1)}
-          </button>
-        ))}
+      <div className="absolute top-4 right-4 z-[1000] bg-white/90 backdrop-blur-sm p-1 rounded-lg shadow-lg border border-white/20 flex">
+        <button
+          onClick={() => setMapStyle("light")}
+          className={`p-2 text-xs rounded-md ${
+            mapStyle === "light"
+              ? "bg-amber-100 text-amber-800"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+        >
+          Light
+        </button>
+        <button
+          onClick={() => setMapStyle("dark")}
+          className={`p-2 text-xs rounded-md ${
+            mapStyle === "dark"
+              ? "bg-amber-100 text-amber-800"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+        >
+          Dark
+        </button>
+        <button
+          onClick={() => setMapStyle("satellite")}
+          className={`p-2 text-xs rounded-md ${
+            mapStyle === "satellite"
+              ? "bg-amber-100 text-amber-800"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+        >
+          Satellite
+        </button>
+        <button
+          onClick={() => setMapStyle("outdoor")}
+          className={`p-2 text-xs rounded-md ${
+            mapStyle === "outdoor"
+              ? "bg-amber-100 text-amber-800"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+        >
+          Outdoor
+        </button>
+        <button
+          onClick={() => setMapStyle("colorful")}
+          className={`p-2 text-xs rounded-md ${
+            mapStyle === "colorful"
+              ? "bg-amber-100 text-amber-800"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+        >
+          Colorful
+        </button>
       </div>
 
       <MapContainer
