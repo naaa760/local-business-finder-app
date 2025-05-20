@@ -98,174 +98,194 @@ export default function MapPage() {
       {/* Main Content */}
       <div className="relative z-10 px-6 py-4">
         {/* Enhanced Navbar */}
-        <nav className="mb-6 bg-white/50 backdrop-blur-xl rounded-2xl shadow-sm border border-white/40">
-          <div className="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
-            <div className="flex items-center gap-8">
-              <Link
-                href="/"
-                className="text-gray-800 font-bold text-xl hover:text-black transition-colors"
-              >
-                Local Business Finder
-              </Link>
-              <div className="hidden md:flex gap-6">
+        <nav className="mb-6">
+          <div className="mx-auto max-w-5xl px-4">
+            <div
+              className="bg-white/30 backdrop-blur-md rounded-full shadow-sm border border-white/40 
+              px-6 py-3 flex justify-between items-center"
+            >
+              <div className="flex items-center gap-6">
                 <Link
-                  href="/map"
-                  className="text-black border-b-2 border-black pb-1 font-medium"
+                  href="/"
+                  className="text-gray-800 font-semibold text-lg hover:text-black transition-colors"
                 >
-                  Explore Map
+                  Local Business Finder
                 </Link>
-                {isSignedIn && (
+                <div className="hidden md:flex gap-4">
                   <Link
-                    href="/profile"
-                    className="text-gray-600 hover:text-gray-900 transition-colors"
+                    href="/map"
+                    className="px-4 py-1.5 rounded-full bg-black/5 text-black font-medium"
                   >
-                    Profile
+                    Explore Map
                   </Link>
+                  {isSignedIn && (
+                    <Link
+                      href="/profile"
+                      className="px-4 py-1.5 rounded-full text-gray-600 hover:bg-black/5"
+                    >
+                      Profile
+                    </Link>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                {isSignedIn ? (
+                  <UserButton
+                    afterSignOutUrl="/"
+                    appearance={{
+                      elements: { avatarBox: "h-8 w-8 rounded-full" },
+                    }}
+                  />
+                ) : (
+                  <>
+                    <SignInButton mode="modal">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="rounded-full hover:bg-black/5"
+                      >
+                        Sign In
+                      </Button>
+                    </SignInButton>
+                    <SignUpButton mode="modal">
+                      <Button
+                        variant="default"
+                        size="sm"
+                        className="rounded-full bg-black hover:bg-gray-900"
+                      >
+                        Sign Up →
+                      </Button>
+                    </SignUpButton>
+                  </>
                 )}
               </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              {isSignedIn ? (
-                <UserButton
-                  afterSignOutUrl="/"
-                  appearance={{
-                    elements: {
-                      avatarBox: "h-9 w-9 rounded-full",
-                    },
-                  }}
-                />
-              ) : (
-                <>
-                  <SignInButton mode="modal">
-                    <Button variant="ghost" size="lg">
-                      Sign In
-                    </Button>
-                  </SignInButton>
-                  <SignUpButton mode="modal">
-                    <Button variant="default" size="lg">
-                      Sign Up →
-                    </Button>
-                  </SignUpButton>
-                </>
-              )}
             </div>
           </div>
         </nav>
 
         {/* Beautiful Search Section */}
-        <div className="mb-6 p-8 bg-white/50 backdrop-blur-xl rounded-[32px] border border-white/40 shadow-lg">
-          <div className="max-w-3xl mx-auto space-y-6">
-            <h1 className="text-2xl font-bold text-gray-900 text-center">
-              Discover Local Businesses
-            </h1>
-            <p className="text-gray-600 text-center mb-8">
-              Find the best places around you, from restaurants to services
-            </p>
+        <div className="mb-8 max-w-3xl mx-auto">
+          <h1 className="text-3xl font-bold text-gray-900 text-center mb-3">
+            Discover Local Businesses
+          </h1>
+          <p className="text-gray-600 text-center mb-8">
+            Find the best places around you, from restaurants to services
+          </p>
 
-            {/* Search Bar Row */}
-            <div className="flex items-center gap-3">
-              {/* Search Input with Icon */}
-              <div className="flex-1 relative">
-                <div className="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <Search className="w-5 h-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search for a location..."
-                  className="w-full h-12 pl-12 pr-4 rounded-full border border-gray-200 
-                    bg-white/90 shadow-sm transition-all hover:shadow-md focus:outline-none 
-                    focus:ring-2 focus:ring-black/5 focus:border-gray-300 text-gray-700
-                    placeholder:text-gray-400"
-                />
+          {/* Search Bar and Buttons */}
+          <div className="flex items-center gap-3">
+            {/* Search Input with Better Icon Alignment */}
+            <div className="flex-1 relative">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none z-10">
+                <MapPin className="w-5 h-5 text-gray-400" strokeWidth={2} />
               </div>
-
-              {/* Use My Location Button */}
-              <Button
-                variant="outline"
-                onClick={() => {
-                  /* handle location */
-                }}
-                className="h-12 px-6 rounded-full border border-gray-200 text-gray-700 
-                  hover:bg-gray-50 hover:border-gray-300 transition-all whitespace-nowrap"
-              >
-                Use My Location
-              </Button>
-
-              {/* Search Button */}
-              <Button
-                variant="default"
-                onClick={searchBusinesses}
-                className="h-12 px-8 rounded-full bg-black hover:bg-gray-900 text-white 
-                  shadow-md hover:shadow-lg transition-all duration-200"
-              >
-                Search
-              </Button>
+              <MapSearchBar
+                onLocationSelect={setLocation}
+                placeholder="Search for a location..."
+                className="w-full h-12 pl-11 pr-4 rounded-full border border-gray-200 
+                  bg-white shadow-sm transition-all hover:shadow-md focus:outline-none 
+                  focus:ring-2 focus:ring-black/5 focus:border-gray-300 text-gray-700
+                  placeholder:text-gray-400"
+              />
             </div>
 
-            {/* Filters Row */}
-            <div className="flex justify-center gap-4 pt-2">
-              {/* Category Filter */}
-              <select
-                value={filters.category}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, category: e.target.value }))
+            {/* Use My Location Button - Keep only this one */}
+            <Button
+              variant="outline"
+              className="h-12 px-6 rounded-full border border-gray-200 text-gray-700 
+                hover:bg-gray-50 hover:border-gray-300 transition-all whitespace-nowrap"
+              onClick={() => {
+                if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                      const { latitude, longitude } = position.coords;
+                      setLocation({ lat: latitude, lng: longitude });
+                    },
+                    (error) => {
+                      console.error("Error getting location:", error);
+                      // Default to a common location if geolocation fails
+                      setLocation({ lat: 40.7128, lng: -74.006 }); // New York
+                    }
+                  );
                 }
-                className="h-10 px-4 rounded-full border border-gray-200 bg-white/90 text-gray-700
-                  focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300"
-              >
-                <option value="all">All Categories</option>
-                <option value="restaurant">Restaurants</option>
-                <option value="cafe">Cafes</option>
-                <option value="store">Stores</option>
-              </select>
+              }}
+            >
+              Use My Location
+            </Button>
 
-              {/* Rating Filter */}
-              <select
-                value={filters.rating}
-                onChange={(e) =>
-                  setFilters((prev) => ({
-                    ...prev,
-                    rating: Number(e.target.value),
-                  }))
-                }
-                className="h-10 px-4 rounded-full border border-gray-200 bg-white/90 text-gray-700
-                  focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300"
-              >
-                <option value="0">Any Rating</option>
-                <option value="3">3+ Stars</option>
-                <option value="4">4+ Stars</option>
-                <option value="4.5">4.5+ Stars</option>
-              </select>
+            {/* Black Search Button */}
+            <Button
+              variant="default"
+              className="h-12 px-8 rounded-full bg-black hover:bg-gray-900 text-white 
+                shadow-md hover:shadow-lg transition-all duration-200"
+              onClick={searchBusinesses}
+            >
+              Search
+            </Button>
+          </div>
 
-              {/* Search Radius */}
-              <select
-                value={filters.radius}
-                onChange={(e) =>
-                  setFilters((prev) => ({
-                    ...prev,
-                    radius: Number(e.target.value),
-                  }))
-                }
-                className="h-10 px-4 rounded-full border border-gray-200 bg-white/90 text-gray-700
-                  focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300"
-              >
-                <option value="5">5 km</option>
-                <option value="10">10 km</option>
-                <option value="20">20 km</option>
-                <option value="50">50 km</option>
-              </select>
-            </div>
+          {/* Filters Row with Rounded Corners */}
+          <div className="flex justify-center gap-4 mt-4">
+            <select
+              value={filters.category}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, category: e.target.value }))
+              }
+              className="h-10 px-4 rounded-full border border-gray-200 bg-white text-gray-700
+                focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300"
+            >
+              <option value="all">All Categories</option>
+              <option value="restaurant">Restaurants</option>
+              <option value="cafe">Cafes</option>
+              <option value="retail">Retail</option>
+              <option value="service">Services</option>
+              <option value="store">Stores</option>
+            </select>
+
+            <select
+              value={filters.rating}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  rating: Number(e.target.value),
+                }))
+              }
+              className="h-10 px-4 rounded-full border border-gray-200 bg-white text-gray-700
+                focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300"
+            >
+              <option value="0">Any Rating</option>
+              <option value="3">3+ Stars</option>
+              <option value="4">4+ Stars</option>
+              <option value="4.5">4.5+ Stars</option>
+            </select>
+
+            <select
+              value={filters.radius}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  radius: Number(e.target.value),
+                }))
+              }
+              className="h-10 px-4 rounded-full border border-gray-200 bg-white text-gray-700
+                focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300"
+            >
+              <option value="5">5 km</option>
+              <option value="10">10 km</option>
+              <option value="20">20 km</option>
+              <option value="50">50 km</option>
+            </select>
           </div>
         </div>
 
         {/* Map and Business List Container */}
         <div className="flex gap-6 h-[calc(100vh-16rem)]">
-          {/* Enhanced Map Container */}
-          <div className="flex-1 rounded-2xl overflow-hidden bg-white/50 backdrop-blur-xl border border-white/40 shadow-lg">
+          {/* Enhanced Map Container with more rounded corners */}
+          <div className="flex-1 rounded-3xl overflow-hidden bg-white/50 backdrop-blur-xl border border-white/40 shadow-lg">
             <div className="h-full relative">
               {loading && (
-                <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
+                <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50 rounded-3xl">
                   <div className="flex flex-col items-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-4 border-amber-500 border-t-transparent" />
                     <p className="mt-4 text-amber-800 font-medium">
@@ -280,14 +300,14 @@ export default function MapPage() {
                   businesses={businesses}
                   userLocation={location}
                   radius={filters.radius}
-                  className="h-full w-full rounded-2xl"
+                  className="h-full w-full rounded-3xl"
                 />
               )}
             </div>
           </div>
 
-          {/* Enhanced Business List */}
-          <div className="w-[480px] hidden lg:flex flex-col rounded-2xl overflow-hidden bg-white/50 backdrop-blur-xl border border-white/40 shadow-lg">
+          {/* Enhanced Business List with more rounded corners */}
+          <div className="w-[480px] hidden lg:flex flex-col rounded-3xl overflow-hidden bg-white/50 backdrop-blur-xl border border-white/40 shadow-lg">
             <div className="p-6 border-b border-amber-100/20 bg-white/60">
               <h2 className="text-xl font-semibold text-gray-800">
                 Places Near You

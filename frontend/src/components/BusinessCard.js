@@ -1,6 +1,7 @@
-import React from "react";
-import { MapPin, Star, Phone, Clock } from "lucide-react";
+import React, { useState } from "react";
+import { MapPin, Star, Phone, Clock, X, Globe, Navigation } from "lucide-react";
 import { Button } from "./ui/button";
+import Image from "next/image";
 
 function getDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Radius of the Earth in km
@@ -17,6 +18,8 @@ function getDistance(lat1, lon1, lat2, lon2) {
 }
 
 export default function BusinessCard({ business, userLocation }) {
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+
   const distance = userLocation
     ? getDistance(
         userLocation.lat,
@@ -27,102 +30,256 @@ export default function BusinessCard({ business, userLocation }) {
     : null;
 
   return (
-    <div className="p-4 hover:bg-white/30 transition-all group">
-      <div className="flex gap-4">
-        {/* Business Image */}
-        {business.photos?.[0] && (
-          <img
-            src={business.photos[0]}
-            alt={business.name}
-            className="w-24 h-24 object-cover rounded-lg shadow-sm"
-          />
-        )}
-
-        {/* Business Info */}
-        <div className="flex-1">
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="font-semibold text-gray-900 group-hover:text-amber-700 transition-colors">
-                {business.name}
-              </h3>
-
-              {/* Rating */}
-              <div className="flex items-center gap-1 mt-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-4 h-4 ${
-                      i < Math.floor(business.rating)
-                        ? "fill-amber-400 text-amber-400"
-                        : "fill-gray-200 text-gray-200"
-                    }`}
-                  />
-                ))}
-                <span className="text-sm text-gray-600 ml-1">
-                  ({business.user_ratings_total || business.reviewCount || 0})
-                </span>
+    <>
+      <div className="p-4 border-b border-gray-100 hover:bg-white/40 transition-colors">
+        <div className="flex gap-3">
+          {/* Business Image */}
+          <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+            {business.photos && business.photos[0] ? (
+              <Image
+                src={business.photos[0]}
+                alt={business.name}
+                width={96}
+                height={96}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-amber-50 text-amber-300">
+                <MapPin size={24} />
               </div>
-            </div>
-
-            {/* Distance Badge */}
-            {distance && (
-              <span className="px-2 py-1 bg-amber-50 text-amber-700 rounded-full text-xs font-medium flex items-center gap-1">
-                <MapPin className="w-3 h-3" />
-                {distance} km
-              </span>
             )}
           </div>
 
-          {/* Additional Info */}
-          <div className="mt-2 space-y-1">
-            <p className="text-sm text-gray-600 line-clamp-2">
-              {business.vicinity || business.formatted_address}
-            </p>
+          {/* Business Info */}
+          <div className="flex-1">
+            <h3 className="font-semibold text-gray-900 line-clamp-1">
+              {business.name}
+            </h3>
 
-            {/* Status and Contact */}
-            <div className="flex items-center gap-3 mt-2">
-              {business.opening_hours?.open_now !== undefined && (
-                <span
-                  className={`text-xs px-2 py-1 rounded-full flex items-center gap-1
-                  ${
-                    business.opening_hours.open_now
-                      ? "bg-green-50 text-green-700"
-                      : "bg-red-50 text-red-700"
-                  }`}
-                >
-                  <Clock className="w-3 h-3" />
-                  {business.opening_hours.open_now ? "Open Now" : "Closed"}
+            {/* Rating */}
+            {business.rating && (
+              <div className="flex items-center mt-1">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={14}
+                      className={`${
+                        i < Math.floor(business.rating)
+                          ? "text-amber-400 fill-amber-400"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="ml-1 text-sm text-gray-600">
+                  {business.rating.toFixed(1)} (
+                  {business.user_ratings_total || 0})
                 </span>
-              )}
+              </div>
+            )}
 
-              {business.phone && (
-                <span className="text-xs text-gray-600 flex items-center gap-1">
-                  <Phone className="w-3 h-3" />
-                  {business.phone}
-                </span>
-              )}
+            {/* Address */}
+            <div className="flex items-center mt-1 text-sm text-gray-500">
+              <MapPin size={14} className="mr-1" />
+              <span className="line-clamp-1">
+                {business.vicinity || business.formatted_address}
+              </span>
             </div>
-          </div>
 
-          {/* Action Buttons */}
-          <div className="mt-3 flex items-center gap-2">
+            {/* Distance */}
+            {distance && (
+              <div className="text-sm text-gray-500 mt-1">
+                <span>{distance} km away</span>
+              </div>
+            )}
+
+            {/* View Details Button */}
             <Button
+              onClick={() => setShowDetailsModal(true)}
               variant="outline"
               size="sm"
-              className="text-amber-700 border-amber-200 hover:bg-amber-50"
+              className="mt-2 text-sm rounded-full h-8 px-4 bg-white hover:bg-amber-50 border-amber-200 text-amber-800 hover:text-amber-900"
             >
               View Details
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-gray-600 hover:text-amber-700"
-            >
-              Get Directions
             </Button>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Details Modal */}
+      {showDetailsModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-gray-900">
+                {business.name}
+              </h2>
+              <button
+                onClick={() => setShowDetailsModal(false)}
+                className="p-1 rounded-full hover:bg-gray-100"
+              >
+                <X size={20} className="text-gray-500" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6">
+              {/* Image Gallery */}
+              {business.photos && business.photos.length > 0 && (
+                <div className="mb-6 overflow-hidden rounded-xl">
+                  <Image
+                    src={business.photos[0]}
+                    alt={business.name}
+                    width={600}
+                    height={300}
+                    className="w-full h-[200px] object-cover"
+                  />
+                </div>
+              )}
+
+              {/* Rating */}
+              {business.rating && (
+                <div className="flex items-center mb-4">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={18}
+                        className={`${
+                          i < Math.floor(business.rating)
+                            ? "text-amber-400 fill-amber-400"
+                            : "text-gray-300"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="ml-2 text-gray-600">
+                    {business.rating.toFixed(1)} (
+                    {business.user_ratings_total || 0} reviews)
+                  </span>
+                </div>
+              )}
+
+              {/* Info List */}
+              <div className="space-y-3 mb-6">
+                {/* Address */}
+                <div className="flex items-start">
+                  <MapPin size={18} className="mr-2 text-gray-500 mt-0.5" />
+                  <span className="text-gray-700">
+                    {business.vicinity || business.formatted_address}
+                  </span>
+                </div>
+
+                {/* Phone */}
+                {business.formatted_phone_number && (
+                  <div className="flex items-start">
+                    <Phone size={18} className="mr-2 text-gray-500 mt-0.5" />
+                    <span className="text-gray-700">
+                      {business.formatted_phone_number}
+                    </span>
+                  </div>
+                )}
+
+                {/* Website */}
+                {business.website && (
+                  <div className="flex items-start">
+                    <Globe size={18} className="mr-2 text-gray-500 mt-0.5" />
+                    <a
+                      href={business.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {formatWebsiteUrl(business.website)}
+                    </a>
+                  </div>
+                )}
+
+                {/* Hours */}
+                {business.opening_hours && (
+                  <div className="flex items-start">
+                    <Clock size={18} className="mr-2 text-gray-500 mt-0.5" />
+                    <div>
+                      {business.opening_hours.open_now !== undefined && (
+                        <div
+                          className={`font-medium ${
+                            business.opening_hours.open_now
+                              ? "text-green-600"
+                              : "text-red-600"
+                          }`}
+                        >
+                          {business.opening_hours.open_now
+                            ? "Open Now"
+                            : "Closed Now"}
+                        </div>
+                      )}
+                      {business.opening_hours.weekday_text && (
+                        <details className="mt-1">
+                          <summary className="text-sm text-blue-600 cursor-pointer">
+                            Show hours
+                          </summary>
+                          <ul className="mt-2 text-sm text-gray-600 space-y-1">
+                            {business.opening_hours.weekday_text.map(
+                              (day, i) => (
+                                <li key={i}>{day}</li>
+                              )
+                            )}
+                          </ul>
+                        </details>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-3">
+                {/* Directions */}
+                {business.geometry?.location && (
+                  <a
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${business.geometry.location.lat},${business.geometry.location.lng}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1"
+                  >
+                    <Button className="w-full rounded-full" variant="default">
+                      <Navigation size={16} className="mr-2" />
+                      Get Directions
+                    </Button>
+                  </a>
+                )}
+
+                {/* Call */}
+                {business.formatted_phone_number && (
+                  <a
+                    href={`tel:${business.formatted_phone_number.replace(
+                      /\D/g,
+                      ""
+                    )}`}
+                    className="flex-1"
+                  >
+                    <Button className="w-full rounded-full" variant="outline">
+                      <Phone size={16} className="mr-2" />
+                      Call
+                    </Button>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
+}
+
+function formatWebsiteUrl(url) {
+  try {
+    const domain = new URL(url).hostname.replace("www.", "");
+    return domain;
+  } catch (e) {
+    return url;
+  }
 }
