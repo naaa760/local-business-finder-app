@@ -353,6 +353,19 @@ export default function HomePage() {
                 </p>
               </div>
 
+              {/* Super simple map image - positioned to right side, no styling */}
+              <div className="flex justify-end mb-8">
+                <div className="transform rotate-3">
+                  <Image
+                    src="/map.png"
+                    alt="Map"
+                    width={200}
+                    height={200}
+                    className="max-w-[160px]"
+                  />
+                </div>
+              </div>
+
               <div className="relative">
                 {/* Connecting line between steps */}
                 <div
