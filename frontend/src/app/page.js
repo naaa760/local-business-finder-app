@@ -212,64 +212,83 @@ export default function HomePage() {
           <br />
 
           {/* Featured places */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="mb-16"
-          >
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-8 text-center">
-              Featured Local Favorites
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {featuredPlaces.map((place) => (
-                <div
-                  key={place.id}
-                  className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:border-white/40 transition-all hover:shadow-lg hover:-translate-y-1"
-                >
-                  <div className="h-40 relative">
-                    <Image
-                      src={place.image}
-                      alt={place.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-5">
-                    <h3 className="text-xl font-semibold text-white mb-2">
-                      {place.title}
-                    </h3>
-                    <div className="flex items-center mb-3">
-                      <div className="flex text-amber-400">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${
-                              i < Math.floor(place.rating)
-                                ? "fill-amber-400"
-                                : "fill-transparent"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-amber-300 text-sm ml-2">
-                        {place.rating} ({place.reviews} reviews)
-                      </span>
-                    </div>
-                    <p className="text-white/80 text-sm mb-4">
-                      {place.description}
-                    </p>
-                    <Link
-                      href={`/business/${place.id}`}
-                      className="text-amber-300 hover:text-amber-200 font-medium text-sm flex items-center"
+          <div className="py-20 relative">
+            {/* Background image */}
+            <div
+              className="absolute inset-0 z-0 opacity-15 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: "url('/b1.png')" }}
+            ></div>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-16">
+                <h2 className="text-base font-semibold text-amber-600 tracking-wide uppercase">
+                  Discover
+                </h2>
+                <h3 className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
+                  Featured Places
+                </h3>
+                <p className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                  Explore these outstanding local businesses in your area
+                </p>
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="mb-16"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {featuredPlaces.map((place) => (
+                    <div
+                      key={place.id}
+                      className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:border-white/40 transition-all hover:shadow-lg hover:-translate-y-1"
                     >
-                      View details <ArrowRight className="h-4 w-4 ml-1" />
-                    </Link>
-                  </div>
+                      <div className="h-40 relative">
+                        <Image
+                          src={place.image}
+                          alt={place.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="p-5">
+                        <h3 className="text-xl font-semibold text-white mb-2">
+                          {place.title}
+                        </h3>
+                        <div className="flex items-center mb-3">
+                          <div className="flex text-amber-400">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-4 w-4 ${
+                                  i < Math.floor(place.rating)
+                                    ? "fill-amber-400"
+                                    : "fill-transparent"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-amber-300 text-sm ml-2">
+                            {place.rating} ({place.reviews} reviews)
+                          </span>
+                        </div>
+                        <p className="text-white/80 text-sm mb-4">
+                          {place.description}
+                        </p>
+                        <Link
+                          href={`/business/${place.id}`}
+                          className="text-amber-300 hover:text-amber-200 font-medium text-sm flex items-center"
+                        >
+                          View details <ArrowRight className="h-4 w-4 ml-1" />
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </motion.div>
             </div>
-          </motion.div>
+          </div>
 
           {/* ===== NEW SECTION: HOW IT WORKS ===== */}
           <div className="py-20 bg-white">
@@ -363,90 +382,15 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* ===== NEW SECTION: CATEGORIES SHOWCASE ===== */}
-          <div className="py-20 bg-gradient-to-b from-amber-50 to-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-16">
-                <h2 className="text-base font-semibold text-amber-600 tracking-wide uppercase">
-                  Explore Categories
-                </h2>
-                <h3 className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
-                  Discover Places by Category
-                </h3>
-                <p className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
-                  Find exactly what you&apos;re looking for with our wide range
-                  of business categories
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                {[
-                  {
-                    icon: "🍽️",
-                    name: "Restaurants",
-                    color: "bg-gradient-to-br from-rose-500 to-orange-500",
-                  },
-                  {
-                    icon: "🛍️",
-                    name: "Retail",
-                    color: "bg-gradient-to-br from-blue-500 to-cyan-400",
-                  },
-                  {
-                    icon: "🔧",
-                    name: "Services",
-                    color: "bg-gradient-to-br from-emerald-500 to-teal-400",
-                  },
-                  {
-                    icon: "🎬",
-                    name: "Entertainment",
-                    color: "bg-gradient-to-br from-purple-500 to-violet-400",
-                  },
-                  {
-                    icon: "💆‍♀️",
-                    name: "Health & Wellness",
-                    color: "bg-gradient-to-br from-teal-500 to-green-400",
-                  },
-                  {
-                    icon: "🏥",
-                    name: "Hospitals",
-                    color: "bg-gradient-to-br from-red-500 to-rose-400",
-                  },
-                ].map((category, index) => (
-                  <motion.div
-                    key={category.name}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    whileHover={{ y: -5, scale: 1.05 }}
-                    className="flex flex-col items-center"
-                  >
-                    <div
-                      className={`w-20 h-20 rounded-2xl ${category.color} flex items-center justify-center text-white text-4xl shadow-lg`}
-                    >
-                      {category.icon}
-                    </div>
-                    <h3 className="mt-4 font-medium text-gray-900">
-                      {category.name}
-                    </h3>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="mt-12 text-center">
-                <button
-                  onClick={(e) => handleProtectedNavigation(e, "/map")}
-                  className="px-6 py-3 bg-amber-100 text-amber-600 rounded-full hover:bg-amber-200 transition-colors text-sm font-medium"
-                >
-                  View All Categories
-                </button>
-              </div>
-            </div>
-          </div>
-
           {/* ===== NEW SECTION: FEATURED CITIES ===== */}
-          <div className="py-20 bg-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="py-20 bg-white relative">
+            {/* Background image */}
+            <div
+              className="absolute inset-0 z-0 opacity-15 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: "url('/b3.png')" }}
+            ></div>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16">
                 <h2 className="text-base font-semibold text-amber-600 tracking-wide uppercase">
                   Popular Destinations
@@ -542,8 +486,14 @@ export default function HomePage() {
           </div>
 
           {/* ===== NEW SECTION: TESTIMONIALS ===== */}
-          <div className="py-20 bg-gradient-to-b from-white to-amber-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="py-20 bg-gradient-to-b from-white to-amber-50 relative">
+            {/* Background image */}
+            <div
+              className="absolute inset-0 z-0 opacity-10 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: "url('/b4.png')" }}
+            ></div>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16">
                 <h2 className="text-base font-semibold text-amber-600 tracking-wide uppercase">
                   What People Say
@@ -623,9 +573,14 @@ export default function HomePage() {
           </div>
 
           {/* ===== NEW SECTION: APP PREVIEW ===== */}
-          <div className="py-20 bg-white relative overflow-hidden">
-            <div className="absolute -right-1/4 top-0 bottom-0 w-1/2 bg-amber-500 rounded-l-[50px] -z-10"></div>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="py-20 bg-white relative">
+            {/* Background image */}
+            <div
+              className="absolute inset-0 z-0 opacity-15 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: "url('/b5.png')" }}
+            ></div>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="md:flex items-center justify-between">
                 <div className="md:w-1/2 mb-12 md:mb-0 pr-0 md:pr-16">
                   <h2 className="text-base font-semibold text-amber-600 tracking-wide uppercase">
