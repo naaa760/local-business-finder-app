@@ -1,8 +1,9 @@
 import React from "react";
 import Link from "next/link";
-import { MapPin, Star, Phone, Clock, X, Globe, Navigation } from "lucide-react";
+import { MapPin, Star, Phone, Clock, Navigation, Heart } from "lucide-react";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 function getDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Radius of the Earth in km
@@ -31,82 +32,126 @@ export default function BusinessCard({ business, userLocation }) {
   // Get business ID from place_id or _id
   const businessId = business.place_id || business._id;
 
+  // Determine category color
+  const getCategoryColor = (category) => {
+    const colors = {
+      restaurant: "from-rose-500 to-orange-500",
+      retail: "from-blue-500 to-cyan-400",
+      service: "from-emerald-500 to-teal-400",
+      entertainment: "from-purple-500 to-violet-400",
+      health: "from-teal-500 to-green-400",
+    };
+    return colors[business.category] || "from-amber-500 to-yellow-400";
+  };
+
   return (
-    <div className="p-4 border-b border-gray-100 hover:bg-white/40 transition-colors">
-      <div className="flex gap-3">
-        {/* Business Image */}
-        <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2 }}
+      className="p-4 border-b border-white/10 hover:bg-white/10 transition-all duration-300 rounded-xl"
+    >
+      <div className="flex gap-4">
+        {/* Business Image with gorgeous styling */}
+        <div className="w-28 h-28 rounded-2xl overflow-hidden bg-gradient-to-br from-amber-50 to-amber-100 flex-shrink-0 shadow-lg relative group">
           {business.photos && business.photos[0] ? (
             <Image
               src={business.photos[0]}
               alt={business.name}
-              width={96}
-              height={96}
-              className="w-full h-full object-cover"
+              width={112}
+              height={112}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-amber-50 text-amber-300">
-              <MapPin size={24} />
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-100 to-amber-50 text-amber-400">
+              <MapPin size={28} className="drop-shadow-md" />
             </div>
           )}
+
+          {/* Category badge */}
+          <div
+            className={`absolute top-2 left-2 px-2 py-0.5 rounded-full text-xs font-medium text-white bg-gradient-to-r ${getCategoryColor(
+              business.category
+            )} shadow-md`}
+          >
+            {business.category || "Place"}
+          </div>
         </div>
 
-        {/* Business Info */}
+        {/* Business Info with enhanced typography and layout */}
         <div className="flex-1">
-          <h3 className="font-semibold text-gray-900 line-clamp-1">
+          <h3 className="font-semibold text-gray-900 line-clamp-1 text-lg">
             {business.name}
           </h3>
 
-          {/* Rating */}
+          {/* Rating with animated stars */}
           {business.rating && (
-            <div className="flex items-center mt-1">
+            <div className="flex items-center mt-1.5">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
-                  <Star
+                  <motion.div
                     key={i}
-                    size={14}
-                    className={`${
-                      i < Math.floor(business.rating)
-                        ? "text-amber-400 fill-amber-400"
-                        : "text-gray-300"
-                    }`}
-                  />
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, delay: i * 0.05 }}
+                  >
+                    <Star
+                      size={16}
+                      className={`${
+                        i < Math.floor(business.rating)
+                          ? "text-amber-400 fill-amber-400"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  </motion.div>
                 ))}
               </div>
-              <span className="ml-1 text-sm text-gray-600">
-                {business.rating.toFixed(1)} ({business.user_ratings_total || 0}
-                )
+              <span className="ml-2 text-sm font-medium text-gray-700">
+                {business.rating.toFixed(1)} (
+                {business.user_ratings_total || business.reviewCount || 0})
               </span>
             </div>
           )}
 
-          {/* Address */}
-          <div className="flex items-center mt-1 text-sm text-gray-500">
-            <MapPin size={14} className="mr-1" />
+          {/* Address with icon */}
+          <div className="flex items-center mt-2 text-sm text-gray-600">
+            <MapPin size={14} className="mr-1 text-amber-500" />
             <span className="line-clamp-1">
-              {business.vicinity || business.formatted_address}
+              {business.vicinity ||
+                business.formatted_address ||
+                business.address}
             </span>
           </div>
 
-          {/* Distance */}
+          {/* Distance with elegant badge */}
           {distance && (
-            <div className="text-sm text-gray-500 mt-1">
-              <span>{distance} km away</span>
+            <div className="mt-2 flex items-center">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                <Navigation size={12} className="mr-1" />
+                {distance} km away
+              </span>
             </div>
           )}
 
-          {/* View Details Button - Link to business detail page */}
-          <Link href={`/business/${businessId}`}>
+          {/* Action buttons */}
+          <div className="mt-3 flex space-x-2">
+            <Link href={`/business/${businessId}`} className="flex-1">
+              <Button
+                variant="default"
+                className="w-full h-8 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-md"
+              >
+                View Details
+              </Button>
+            </Link>
             <Button
               variant="outline"
-              className="mt-2 text-sm h-8 px-3 w-full justify-center"
+              className="h-8 w-8 rounded-full border-amber-200 text-amber-500 hover:text-amber-600 hover:bg-amber-50"
             >
-              View Details
+              <Heart size={16} />
             </Button>
-          </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
