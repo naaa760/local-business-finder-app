@@ -29,81 +29,71 @@ export default function ReviewForm({ businessId, onReviewSubmitted }) {
 
     setSubmitting(true);
     setError("");
-    setSuccess(false);
 
     try {
-      // Get token using the correct Clerk method
-      let token;
-      try {
-        // Try to get token from Clerk
-        token = await getToken();
-      } catch (err) {
-        console.warn("Could not get auth token:", err);
-        // Continue with a fallback for demo purposes
-        token = "demo-token";
-      }
+      // Get auth token from Clerk
+      const token = await getToken();
 
-      console.log(
-        "Submitting review with token:",
-        token ? "Token obtained" : "No token"
-      );
+      // Prepare review data
+      const reviewData = {
+        rating,
+        comment,
+        businessId,
+      };
 
       // Submit review with authorization
+      // FIXED: Changed API endpoint to match backend structure
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/external/reviews/${businessId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/businesses/${businessId}/reviews`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            ...(token && { Authorization: `Bearer ${token}` }),
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            rating,
-            comment,
-            userName: user?.fullName || user?.username || "Anonymous User",
-          }),
+          body: JSON.stringify(reviewData),
         }
       );
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to submit review");
+        throw new Error("Failed to submit review");
       }
 
-      const newReview = await response.json();
-      setRating(0);
-      setComment("");
+      const data = await response.json();
       setSuccess(true);
+      setComment("");
+      setRating(0);
 
+      // Call the callback to update parent component
       if (onReviewSubmitted) {
-        onReviewSubmitted(newReview);
+        onReviewSubmitted(data);
       }
     } catch (err) {
-      console.error("Review submission error:", err);
-      setError(err.message || "Failed to submit review");
+      console.error("Error submitting review:", err);
+      setError("Failed to submit review. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-gray-50 p-4 rounded-lg border">
-      <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
-
+    <form onSubmit={handleSubmit} className="space-y-4">
       {!isSignedIn ? (
-        <div className="mb-4 p-4 bg-blue-50 text-blue-700 rounded-md">
-          <p className="mb-2">Please sign in to leave a review</p>
+        <div className="bg-amber-50 p-4 rounded-xl text-center">
+          <p className="text-amber-800 mb-4">
+            Please sign in to leave a review
+          </p>
           <SignInButton mode="modal">
-            <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            <button className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
               Sign In
             </button>
           </SignInButton>
         </div>
       ) : (
         <>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Your Rating:</label>
-            <div className="flex">
+          <div>
+            <label className="block text-gray-700 mb-2">Rating</label>
+            <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
@@ -116,7 +106,7 @@ export default function ReviewForm({ businessId, onReviewSubmitted }) {
                   <span
                     className={`${
                       star <= (hoveredRating || rating)
-                        ? "text-yellow-400"
+                        ? "text-amber-400"
                         : "text-gray-300"
                     }`}
                   >
@@ -127,23 +117,23 @@ export default function ReviewForm({ businessId, onReviewSubmitted }) {
             </div>
           </div>
 
-          <div className="mb-4">
+          <div>
             <label htmlFor="comment" className="block text-gray-700 mb-2">
-              Your Review:
+              Your Review
             </label>
             <textarea
               id="comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
               rows="4"
               placeholder="Share your experience with this business..."
             />
           </div>
 
-          {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
+          {error && <div className="text-red-500 text-sm">{error}</div>}
           {success && (
-            <div className="mb-4 text-green-500 text-sm">
+            <div className="text-green-600 text-sm">
               Your review has been submitted successfully!
             </div>
           )}
@@ -151,7 +141,7 @@ export default function ReviewForm({ businessId, onReviewSubmitted }) {
           <button
             type="submit"
             disabled={submitting}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-blue-400"
+            className="w-full px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors disabled:bg-amber-300"
           >
             {submitting ? "Submitting..." : "Submit Review"}
           </button>

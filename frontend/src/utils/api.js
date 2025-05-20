@@ -74,23 +74,56 @@ export const submitReview = async (businessId, rating, comment) => {
 };
 
 export const toggleFavorite = async (businessId) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/favorites/${businessId}`,
-    {
-      method: "POST",
-    }
-  );
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/businesses/${businessId}/favorite/toggle`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-  if (!response.ok) throw new Error("Failed to toggle favorite status");
-  return response.json();
+    if (!response.ok) {
+      console.error("Failed to toggle favorite");
+      throw new Error("Failed to toggle favorite");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error toggling favorite:", error);
+    throw error;
+  }
 };
 
 export const checkIsFavorite = async (businessId) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/favorites/check/${businessId}`
-  );
-  if (!response.ok) throw new Error("Failed to check favorite status");
-  return response.json();
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/businesses/${businessId}/favorite/check`,
+      {
+        credentials: "include", // Important for auth cookies
+      }
+    );
+
+    // If not authenticated, just return not favorite instead of error
+    if (response.status === 401) {
+      return { isFavorite: false };
+    }
+
+    if (!response.ok) {
+      console.warn(
+        "Failed to check favorite status, defaulting to not favorite"
+      );
+      return { isFavorite: false };
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error checking favorite status:", error);
+    return { isFavorite: false }; // Default to not favorite on error
+  }
 };
 
 export const fetchUserBusinesses = async () => {
