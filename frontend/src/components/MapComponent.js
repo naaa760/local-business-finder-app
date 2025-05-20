@@ -484,7 +484,7 @@ export default function MapComponent({
   );
 }
 
-// Helper function to get category color classes - add consistent categories
+// Helper function to get category color classes - add consistent categories including hospital
 function getCategoryColorClass(category) {
   const colors = {
     restaurant: "from-rose-500 to-orange-500",
@@ -492,6 +492,7 @@ function getCategoryColorClass(category) {
     service: "from-emerald-500 to-teal-400",
     entertainment: "from-purple-500 to-violet-400",
     health: "from-teal-500 to-green-400",
+    hospital: "from-red-500 to-rose-400",
   };
   return colors[category] || "from-amber-500 to-yellow-400";
 }
