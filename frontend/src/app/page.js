@@ -132,12 +132,6 @@ export default function HomePage() {
             <div className="flex items-center gap-2">
               {isSignedIn ? (
                 <div className="flex items-center gap-2">
-                  <Link
-                    href="/profile"
-                    className="px-4 py-2 rounded-full text-sm text-white hover:bg-white/10 transition-colors"
-                  >
-                    My Profile
-                  </Link>
                   <UserButton afterSignOutUrl="/" />
                 </div>
               ) : (

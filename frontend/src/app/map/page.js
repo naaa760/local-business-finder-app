@@ -124,84 +124,21 @@ export default function MapPage() {
       {/* Main Content */}
       <div className="relative z-10 px-4 sm:px-6 py-4 max-w-[1440px] mx-auto">
         {/* Beautiful oval transparent navbar */}
-        <div className="relative z-20 mb-8 px-2 sm:px-4">
-          <motion.nav
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="bg-white/50 backdrop-blur-sm shadow-sm border border-amber-100/50 rounded-full px-3 py-2 max-w-3xl mx-auto"
-          >
-            <div className="flex items-center justify-between h-10 sm:h-12">
-              {/* Logo and brand */}
-              <Link href="/" className="flex items-center gap-1.5 sm:gap-2">
-                <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-1.5 rounded-lg">
-                  <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                </div>
-                <span className="text-sm sm:text-base font-semibold bg-gradient-to-r from-amber-600 to-amber-800 text-transparent bg-clip-text">
-                  LocalFinder
-                </span>
-              </Link>
+        <div className="rounded-full bg-white/80 backdrop-blur-lg border border-white/50 shadow-lg p-1.5 mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-1 px-2">
+            <Link href="/" className="flex items-center">
+              <MapPin className="h-5 w-5 text-amber-500" />
+              <span className="ml-1 font-semibold text-gray-900 hidden sm:inline-block">
+                LocalFinder
+              </span>
+            </Link>
+          </div>
 
-              {/* Navigation links - hidden on mobile */}
-              <div className="hidden md:flex items-center space-x-1">
-                <Link
-                  href="/map"
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium ${
-                    pathname === "/map"
-                      ? "bg-amber-50 text-amber-800"
-                      : "text-gray-700 hover:bg-amber-50 hover:text-amber-800"
-                  } transition-colors`}
-                >
-                  Explore
-                </Link>
-              </div>
-
-              {/* User menu */}
-              <div className="flex items-center gap-1 sm:gap-2">
-                {/* Profile button */}
-                <Link
-                  href="/profile"
-                  className="flex items-center gap-1 sm:gap-1.5 px-2 py-1.5 rounded-full text-xs sm:text-sm font-medium text-gray-700 hover:bg-amber-50 hover:text-amber-800 transition-colors"
-                >
-                  <div className="relative">
-                    <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-full bg-amber-100 flex items-center justify-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <span className="absolute -top-0.5 -right-0.5 h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-amber-500 border-2 border-white"></span>
-                  </div>
-                  <span className="hidden md:inline text-xs">Profile</span>
-                </Link>
-
-                {isSignedIn ? (
-                  <UserButton afterSignOutUrl="/" />
-                ) : (
-                  <div className="flex items-center gap-1 sm:gap-1.5">
-                    <SignInButton mode="modal">
-                      <button className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs rounded-full text-gray-700 hover:bg-amber-50 hover:text-amber-800 transition-colors">
-                        Sign in
-                      </button>
-                    </SignInButton>
-                    <SignUpButton mode="modal">
-                      <button className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs rounded-full bg-amber-500 text-white hover:bg-amber-600 transition-colors">
-                        Sign up
-                      </button>
-                    </SignUpButton>
-                  </div>
-                )}
-              </div>
+          <div className="flex items-center">
+            <div className="ml-2">
+              <UserButton afterSignOutUrl="/" />
             </div>
-          </motion.nav>
+          </div>
         </div>
 
         {/* Beautiful Search Section - Added spacing and responsive design */}
