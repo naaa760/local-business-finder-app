@@ -90,7 +90,6 @@ export default function MapPage() {
     } catch (err) {
       console.error("Error searching businesses:", err);
       setError("Failed to load businesses. Please try again.");
-      setBusinesses([]); // Ensure businesses is set to empty array on error
     } finally {
       setLoading(false);
     }
@@ -340,41 +339,14 @@ export default function MapPage() {
             }}
           >
             {location ? (
-              error ? (
-                <div className="w-full h-full flex items-center justify-center bg-amber-50/30">
-                  <div className="text-center p-6 max-w-md">
-                    <div className="bg-amber-100 text-amber-700 p-4 rounded-xl shadow-sm mb-4">
-                      <h3 className="font-bold text-lg mb-2">
-                        Google Maps API Issue
-                      </h3>
-                      <p className="text-sm">
-                        We&apos;re having trouble connecting to Google Maps.
-                        This could be due to:
-                      </p>
-                      <ul className="text-sm list-disc pl-5 mt-2 text-left">
-                        <li>An ad-blocker preventing the API from loading</li>
-                        <li>Google API usage limits</li>
-                        <li>Network connectivity issues</li>
-                      </ul>
-                    </div>
-                    <button
-                      onClick={() => searchBusinesses()}
-                      className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-full shadow-sm transition-colors"
-                    >
-                      Try Again
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <MapComponent
-                  businesses={businesses}
-                  userLocation={location}
-                  onBusinessClick={(business) => {
-                    // Handle business click if needed
-                  }}
-                  className="w-full h-full rounded-xl"
-                />
-              )
+              <MapComponent
+                businesses={businesses}
+                userLocation={location}
+                onBusinessClick={(business) => {
+                  // Handle business click if needed
+                }}
+                className="w-full h-full rounded-xl"
+              />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-amber-50/30">
                 <div className="text-center p-4">
