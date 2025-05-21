@@ -97,6 +97,9 @@ export const fetchRealBusinessesFromGooglePlaces = async (
   category
 ) => {
   try {
+    // Log the input parameters to help with debugging
+    console.log("API call parameters:", { lat, lng, radius, category });
+
     // First try the original API endpoint (for local development)
     const useBackendProxy =
       typeof window !== "undefined" && window.location.hostname === "localhost";
@@ -122,13 +125,12 @@ export const fetchRealBusinessesFromGooglePlaces = async (
       }
     }
 
-    // ---- IMPROVED MAPBOX IMPLEMENTATION ----
+    // ---- IMPROVED MAPBOX IMPLEMENTATION WITH ADDITIONAL ERROR HANDLING ----
 
-    // Much larger radius for better results (convert to degrees approximation)
-    // Using a larger fixed value to ensure wider coverage
-    const radiusDegrees = 0.05; // Approximately 5km which should be enough to find POIs
+    // Properly scale the radius based on the filter setting
+    const radiusDegrees = Math.max((radius / 100000) * 0.9, 0.01);
 
-    // Create bounding box
+    // Create bounding box based on the actual radius parameter
     const bbox = [
       lng - radiusDegrees,
       lat - radiusDegrees,
@@ -136,8 +138,8 @@ export const fetchRealBusinessesFromGooglePlaces = async (
       lat + radiusDegrees,
     ].join(",");
 
-    // Improved category mapping
-    let searchTerm = "restaurant";
+    // Improved category mapping with better handling of "all" category
+    let searchTerm = "";
     if (category && category !== "all") {
       // Map Google Places categories to Mapbox-friendly terms
       const categoryMap = {
@@ -159,68 +161,188 @@ export const fetchRealBusinessesFromGooglePlaces = async (
         food: "food restaurant",
       };
       searchTerm = categoryMap[category] || category;
+    } else {
+      // For "all" category, use a generic term that will return diverse results
+      searchTerm = "point of interest";
     }
 
-    // Make request to Mapbox - using a generic "poi" search instead of specific categories
-    // This approach gets more results
+    console.log(
+      `Category '${category}' mapped to search term: '${searchTerm}'`
+    );
+
+    // Make request to Mapbox
     const mapboxToken =
+      process.env.NEXT_PUBLIC_MAPBOX_TOKEN ||
       "pk.eyJ1IjoidmFpZGlrMTMxNyIsImEiOiJjbWF4c2VuejIwMWRjMmtzNjR5cGRreXoxIn0.1Mco54tu0v_aasnfmPN-iQ";
 
-    // Added proximity parameter which is crucial for location-based results
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchTerm}.json?proximity=${lng},${lat}&bbox=${bbox}&limit=20&types=poi&access_token=${mapboxToken}`;
+    // Build URL with extra error checking
+    let url;
+    if (category && category !== "all") {
+      url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchTerm}.json?proximity=${lng},${lat}&bbox=${bbox}&limit=20&types=poi&access_token=${mapboxToken}`;
+    } else {
+      url = `https://api.mapbox.com/geocoding/v5/mapbox.places/point%20of%20interest.json?proximity=${lng},${lat}&bbox=${bbox}&limit=25&types=poi&access_token=${mapboxToken}`;
+    }
 
-    console.log("Fetching from Mapbox with URL:", url);
+    console.log("Fetching from Mapbox with URL (partial):", url.split("?")[0]);
 
     const response = await fetch(url);
 
     if (!response.ok) {
+      console.error("Mapbox API error response:", await response.text());
       throw new Error("Failed to fetch places data");
     }
 
     const data = await response.json();
-    console.log("Mapbox raw response:", data);
 
-    // Generate random ratings between 3.5 and 5.0 for better results display
+    // CRITICAL FIX: Additional error checking for features and center properties
+    if (!data.features || data.features.length === 0) {
+      console.warn("No features found in Mapbox response");
+      throw new Error("No features in response");
+    }
+
+    console.log(`Mapbox returned ${data.features.length} results`);
+
+    // Generate random ratings
     const randomRating = () => Math.floor(Math.random() * 15 + 35) / 10;
 
-    // Transform Mapbox data to expected format
-    const results = data.features.map((feature) => ({
-      id: feature.id,
-      name: feature.text || feature.place_name.split(",")[0],
-      vicinity: feature.place_name,
-      geometry: {
-        location: {
-          lat: feature.center[1],
-          lng: feature.center[0],
-        },
-      },
-      rating: randomRating(),
-      types: [category || "point_of_interest"],
-      photos: [
-        {
-          photo_reference: "default",
-        },
-      ],
-    }));
+    // Transform Mapbox data to expected format with correct structure for MapComponent
+    const results = data.features
+      .filter(
+        (feature) =>
+          feature &&
+          feature.center &&
+          Array.isArray(feature.center) &&
+          feature.center.length >= 2
+      )
+      .map((feature) => {
+        const lat = feature.center[1];
+        const lng = feature.center[0];
 
-    // If still no results, provide some fallback data
+        return {
+          // Add both id formats for compatibility
+          id: feature.id || `generated-${Math.random()}`,
+          place_id: feature.id || `generated-${Math.random()}`, // For BusinessList key
+          _id: feature.id || `generated-${Math.random()}`, // Alternative key
+          name:
+            feature.text ||
+            feature.place_name?.split(",")[0] ||
+            "Unnamed Place",
+          vicinity: feature.place_name || "Unknown location",
+          // Keep BOTH geometry.location AND location.coordinates formats
+          geometry: {
+            location: {
+              lat,
+              lng,
+            },
+          },
+          // Add location.coordinates format for MapComponent
+          location: {
+            coordinates: [lng, lat], // Note: GeoJSON format is [lng, lat]
+          },
+          // Make sure photos is properly formed with a URL
+          photos: [
+            feature.properties?.image ||
+              "https://via.placeholder.com/100?text=No+Image",
+          ],
+          originalCategory:
+            feature.properties?.category || category || "point_of_interest",
+          rating: randomRating(),
+          types: [category || "point_of_interest"],
+        };
+      });
+
+    // If still no results, provide fallback data
     if (results.length === 0) {
       console.warn("No places found in Mapbox response, using fallback data");
-      // Generate 5 fake businesses around the location
+
+      // If we're filtering by category and got no results, try a more generic search
+      if (category && category !== "all") {
+        console.log("Trying a generic search to get fallback results");
+        try {
+          const fallbackUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/point%20of%20interest.json?proximity=${lng},${lat}&bbox=${bbox}&limit=5&types=poi&access_token=${mapboxToken}`;
+          const fallbackResponse = await fetch(fallbackUrl);
+          if (fallbackResponse.ok) {
+            const fallbackData = await fallbackResponse.json();
+            if (fallbackData.features && fallbackData.features.length > 0) {
+              console.log("Found generic fallback places");
+              return fallbackData.features.map((feature) => {
+                const lat = feature.center[1];
+                const lng = feature.center[0];
+
+                return {
+                  id: feature.id || `fallback-${Math.random()}`,
+                  place_id: feature.id || `fallback-${Math.random()}`,
+                  _id: feature.id || `fallback-${Math.random()}`,
+                  name:
+                    feature.text ||
+                    feature.place_name?.split(",")[0] ||
+                    "Unnamed Place",
+                  vicinity: feature.place_name || "Unknown location",
+                  geometry: {
+                    location: {
+                      lat,
+                      lng,
+                    },
+                  },
+                  location: {
+                    coordinates: [lng, lat],
+                  },
+                  photos: ["https://via.placeholder.com/100?text=No+Image"],
+                  rating: randomRating(),
+                  types: [category || "point_of_interest"],
+                };
+              });
+            }
+          }
+        } catch (fallbackError) {
+          console.error("Error fetching fallback places:", fallbackError);
+        }
+      }
+
+      // Generate fake businesses around the location as a last resort
       return Array.from({ length: 5 }, (_, i) => {
-        // Random small offset for locations (within ~500m)
         const latOffset = (Math.random() - 0.5) * 0.01;
         const lngOffset = (Math.random() - 0.5) * 0.01;
 
+        // Generate names based on the category if possible
+        let name = "";
+        if (category === "restaurant" || category === "food") {
+          name = [
+            `Local Bistro`,
+            `City Restaurant`,
+            `Family Diner`,
+            `Gourmet Kitchen`,
+            `Tasty Treats`,
+          ][i];
+        } else if (category === "cafe") {
+          name = [
+            `Morning Coffee`,
+            `Cup & Bean`,
+            `Brew House`,
+            `Cafe Central`,
+            `Tea & Cake`,
+          ][i];
+        } else if (category === "bar") {
+          name = [
+            `Night Bar`,
+            `Local Pub`,
+            `Cocktail Lounge`,
+            `Wine Bar`,
+            `Brewery`,
+          ][i];
+        } else {
+          name = [
+            `Local Spot ${i + 1}`,
+            `City Place ${i + 1}`,
+            `Popular Destination ${i + 1}`,
+            `Neighborhood Gem ${i + 1}`,
+            `Must Visit ${i + 1}`,
+          ][i];
+        }
+
         return {
-          id: `fallback-${i}`,
-          name: [
-            `Local Restaurant`,
-            `Cafe Delight`,
-            `City Bakery`,
-            `Corner Store`,
-            `Main Street Shop`,
-          ][i],
+          id: `fallback-${category}-${i}`,
+          name,
           vicinity: `Near ${lat.toFixed(4)}, ${lng.toFixed(4)}`,
           geometry: {
             location: {
@@ -230,27 +352,25 @@ export const fetchRealBusinessesFromGooglePlaces = async (
           },
           rating: randomRating(),
           types: [category || "point_of_interest"],
-          photos: [
-            {
-              photo_reference: "default",
-            },
-          ],
+          photos: [{ photo_reference: "default" }],
         };
       });
     }
 
-    console.log("Found places:", results.length);
     return results;
   } catch (error) {
     console.error("Error fetching places:", error);
-    // On error, return fallback data instead of throwing
-    // This ensures the user always sees something
-    const fallbackPlaces = Array.from({ length: 3 }, (_, i) => {
+    // Generate fallback places on error
+    return Array.from({ length: 3 }, (_, i) => {
       const latOffset = (Math.random() - 0.5) * 0.01;
       const lngOffset = (Math.random() - 0.5) * 0.01;
+      const lat = parseFloat(lat) + latOffset;
+      const lng = parseFloat(lng) + lngOffset;
 
       return {
         id: `error-fallback-${i}`,
+        place_id: `error-fallback-${i}`, // For BusinessList key
+        _id: `error-fallback-${i}`, // Alternative key
         name: [
           `Emergency Backup Restaurant`,
           `Fallback Cafe`,
@@ -259,20 +379,18 @@ export const fetchRealBusinessesFromGooglePlaces = async (
         vicinity: `Near specified location`,
         geometry: {
           location: {
-            lat: lat + latOffset,
-            lng: lng + lngOffset,
+            lat,
+            lng,
           },
         },
+        // Add location.coordinates format for MapComponent
+        location: {
+          coordinates: [lng, lat],
+        },
+        photos: ["https://via.placeholder.com/100?text=No+Image"],
         rating: 4.5,
         types: ["point_of_interest"],
-        photos: [
-          {
-            photo_reference: "default",
-          },
-        ],
       };
     });
-
-    return fallbackPlaces;
   }
 };
