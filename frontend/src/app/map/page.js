@@ -47,6 +47,7 @@ export default function MapPage() {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [showMap, setShowMap] = useState(true);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [mobileView, setMobileView] = useState("list");
 
   // Get user's location on mount
   useEffect(() => {
@@ -193,6 +194,39 @@ export default function MapPage() {
         <br />
         <br />
 
+        {/* Mobile View Toggle Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="lg:hidden flex justify-center mb-3"
+        >
+          <div className="bg-white/90 rounded-full p-1 shadow-md flex">
+            <button
+              onClick={() => setMobileView("list")}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium flex items-center ${
+                mobileView === "list"
+                  ? "bg-amber-500 text-white"
+                  : "text-gray-700"
+              }`}
+            >
+              <Filter className="h-4 w-4 mr-1.5" />
+              List
+            </button>
+            <button
+              onClick={() => setMobileView("map")}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium flex items-center ${
+                mobileView === "map"
+                  ? "bg-amber-500 text-white"
+                  : "text-gray-700"
+              }`}
+            >
+              <Map className="h-4 w-4 mr-1.5" />
+              Map
+            </button>
+          </div>
+        </motion.div>
+
         {/* Enhanced Map and Business listing container with improved sizing and layout */}
         <div className="flex-1 flex flex-col lg:flex-row gap-3 overflow-hidden">
           {/* Left: Business search and listing - larger and more organized */}
@@ -200,7 +234,9 @@ export default function MapPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="w-full lg:w-[420px] xl:w-[480px] h-full flex flex-col shadow-xl rounded-2xl bg-white/90 backdrop-blur-md overflow-hidden"
+            className={`w-full lg:w-[420px] xl:w-[480px] h-full flex flex-col shadow-xl rounded-2xl bg-white/90 backdrop-blur-md overflow-hidden ${
+              mobileView === "map" ? "hidden lg:flex" : "flex"
+            }`}
           >
             {/* Enhanced Search Bar with beautiful styling */}
             <div className="bg-gradient-to-r from-amber-50 to-amber-100/50 p-4 border-b border-amber-100">
@@ -295,7 +331,9 @@ export default function MapPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex-1 bg-white/30 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden h-full border border-white/50"
+            className={`flex-1 bg-white/30 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden h-full border border-white/50 ${
+              mobileView === "list" ? "hidden lg:block" : "block"
+            }`}
           >
             <MapComponent
               businesses={businesses}
