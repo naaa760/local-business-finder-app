@@ -568,6 +568,7 @@ export default function HomePage() {
                     </button>
                   </div>
                 </div>
+
                 <div className="md:w-1/2 relative">
                   <motion.div
                     initial={{ opacity: 0, y: 50 }}

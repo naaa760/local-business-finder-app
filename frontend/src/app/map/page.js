@@ -14,6 +14,7 @@ import {
   Star,
   Menu,
   X,
+  Map,
 } from "lucide-react";
 import MapSearchBar from "@/components/MapSearchBar";
 import BusinessFilters from "@/components/BusinessFilters";
@@ -122,42 +123,66 @@ export default function MapPage() {
       <div className="fixed left-10 bottom-10 w-64 h-64 bg-gradient-radial from-amber-500/10 to-transparent rounded-full blur-2xl z-1" />
 
       {/* Main Content */}
-      <div className="relative z-10 px-4 sm:px-6 py-4 max-w-[1440px] mx-auto">
-        {/* Beautiful oval transparent navbar */}
-        <div className="rounded-full bg-white/80 backdrop-blur-lg border border-white/50 shadow-lg p-1.5 mb-4 flex items-center justify-between">
+      <div className="relative z-10 px-2 sm:px-6 py-2 sm:py-4 max-w-[1440px] mx-auto">
+        {/* Enhanced mobile-friendly navbar */}
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.4 }}
+          className="rounded-full bg-white/90 backdrop-blur-xl border border-white/50 shadow-lg p-1.5 mb-3 sm:mb-4 flex items-center justify-between"
+        >
           <div className="flex items-center gap-1 px-2">
             <Link href="/" className="flex items-center">
-              <MapPin className="h-5 w-5 text-amber-500" />
-              <span className="ml-1 font-semibold text-gray-900 hidden sm:inline-block">
+              <div className="bg-gradient-to-r from-amber-500 to-amber-600 p-1.5 rounded-full">
+                <MapPin className="h-4 w-4 text-white" />
+              </div>
+              <span className="ml-1.5 font-semibold text-gray-900 hidden sm:inline-block">
                 LocalFinder
               </span>
             </Link>
           </div>
 
-          <div className="flex items-center">
-            <div className="ml-2">
+          <div className="flex items-center space-x-2">
+            <Link
+              href="/"
+              className="hidden sm:flex text-sm text-gray-600 hover:text-amber-600 px-3 py-1.5 rounded-full transition-colors"
+            >
+              Home
+            </Link>
+            <Link
+              href="/map"
+              className="hidden sm:flex items-center text-sm text-amber-600 font-medium bg-amber-50 px-3 py-1.5 rounded-full"
+            >
+              <Map className="h-3.5 w-3.5 mr-1" />
+              Map
+            </Link>
+            <div className="ml-1">
               <UserButton afterSignOutUrl="/" />
             </div>
           </div>
-        </div>
+        </motion.div>
+        <br />
+        <br />
+        <br />
 
-        {/* Beautiful Search Section - Added spacing and responsive design */}
+        {/* Enhanced beautiful Search Section */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="max-w-4xl mx-auto mb-6 sm:mb-10"
+          className="max-w-4xl mx-auto mb-4 sm:mb-8"
         >
-          <div className="text-center mb-4 sm:mb-8">
-            <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">
-              <span className="relative inline-block">
+          <div className="text-center mb-3 sm:mb-6">
+            <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-amber-800 mb-2 sm:mb-4 tracking-tight">
+              <span className="relative inline-block px-1 py-1">
                 Discover Amazing Places
-                <span className="absolute -bottom-1 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full transform translate-y-1"></span>
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full transform translate-y-1 opacity-80"></div>
+                <div className="absolute -bottom-1 left-4 right-4 h-[2px] bg-amber-300/50 rounded-full blur-[1px]"></div>
               </span>
             </h1>
-            <p className="text-gray-600 text-sm sm:text-lg mb-4 sm:mb-8 max-w-2xl mx-auto">
+            <p className="text-gray-600 text-xs sm:text-sm md:text-base mb-4 sm:mb-6 max-w-xl mx-auto px-3 sm:px-0">
               Find the best local businesses around you — from cozy cafes to
-              luxurious hotels
+              hidden gems
             </p>
           </div>
 
@@ -173,32 +198,6 @@ export default function MapPage() {
                     focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus:outline-none transition-all"
                 />
               </div>
-
-              {/* Use Location Button */}
-              <Button
-                variant="outline"
-                onClick={() => {
-                  if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                      (position) => {
-                        const { latitude, longitude } = position.coords;
-                        setLocation({ lat: latitude, lng: longitude });
-                      },
-                      (error) => {
-                        console.error("Error getting location:", error);
-                        alert(
-                          "Could not get your location. Please allow location access."
-                        );
-                      }
-                    );
-                  }
-                }}
-                className="w-full md:w-auto h-12 px-6 border border-amber-200 bg-white/80 text-amber-700 
-                  rounded-full hover:bg-amber-50 hover:border-amber-300 transition-all"
-              >
-                <Compass className="mr-2 h-5 w-5" />
-                Use My Location
-              </Button>
             </div>
 
             {/* Responsive Filters Section */}
