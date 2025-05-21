@@ -108,41 +108,39 @@ export default function HomePage() {
       />
 
       {/* Header */}
-      <header className="relative z-10 px-4 sm:px-6 lg:px-8 py-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between">
+      <header className="relative z-10 px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white/10 backdrop-blur-md rounded-full border border-white/20 px-4 py-2 flex items-center justify-between max-w-xl mx-auto">
             <div className="flex items-center gap-2">
-              <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-2 rounded-lg">
-                <MapPin className="h-5 w-5" />
+              <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-1.5 rounded-lg">
+                <MapPin className="h-4 w-4" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 text-transparent bg-clip-text">
+              <span className="text-lg font-bold bg-gradient-to-r from-amber-400 to-amber-600 text-transparent bg-clip-text">
                 LocalFinder
               </span>
             </div>
 
-            <div className="hidden md:flex items-center space-x-1">
+            <div className="flex items-center space-x-2">
               <Link
-                href="/map"
-                className="px-4 py-2 rounded-full text-white hover:bg-white/10 transition-colors"
+                href="/about"
+                className="px-3 py-1 rounded-full text-white hover:bg-white/10 transition-colors text-sm"
               >
                 About
               </Link>
-            </div>
 
-            <div className="flex items-center gap-2">
               {isSignedIn ? (
-                <div className="flex items-center gap-2">
+                <div className="ml-1">
                   <UserButton afterSignOutUrl="/" />
                 </div>
               ) : (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <SignInButton mode="modal">
-                    <button className="px-4 py-2 rounded-full text-sm text-white hover:bg-white/10 transition-colors">
+                    <button className="px-3 py-1 rounded-full text-sm text-white hover:bg-white/10 transition-colors">
                       Sign in
                     </button>
                   </SignInButton>
                   <SignUpButton mode="modal">
-                    <button className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-full text-sm transition-colors">
+                    <button className="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-full text-sm transition-colors">
                       Get Started
                     </button>
                   </SignUpButton>
@@ -157,11 +155,11 @@ export default function HomePage() {
       <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto">
           {/* Announcement banner */}
-          <div className="bg-white/10 backdrop-blur-md rounded-full px-4 py-2 mb-8 flex items-center justify-center space-x-2 border border-white/20 max-w-2xl mx-auto">
-            <div className="bg-amber-500 rounded-full p-1">
-              <Star className="h-3 w-3 text-white" />
+          <div className="bg-white/10 backdrop-blur-md rounded-full px-4 py-1 mb-8 flex items-center justify-center space-x-2 border border-white/20 w-fit mx-auto">
+            <div className="bg-amber-500 rounded-full p-0.5">
+              <Star className="h-2.5 w-2.5 text-white" />
             </div>
-            <span className="text-sm text-white">
+            <span className="text-xs text-white whitespace-nowrap">
               I&apos;ve just launched our new location recommendation feature
             </span>
           </div>
@@ -173,12 +171,15 @@ export default function HomePage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6">
-              Turning your time into{" "}
-              <span className="bg-gradient-to-r from-amber-300 to-amber-500 bg-clip-text text-transparent">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white">
+              <span className="bg-gradient-to-r from-[#f5f5dc] to-[#5c4033] bg-clip-text text-transparent">
+                Turning your time into{" "}
+              </span>
+              <span className="bg-gradient-to-r from-orange-400 via-yellow-300 to-yellow-500 bg-clip-text text-transparent">
                 Finder App
               </span>
             </h1>
+
             <p className="text-lg sm:text-xl text-white/80 max-w-3xl mx-auto mb-8">
               Find the best local businesses, restaurants, and services in your
               area with real reviews from real people.

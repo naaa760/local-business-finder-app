@@ -16,7 +16,8 @@ function getDistance(lat1, lon1, lat2, lon2) {
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return (R * c).toFixed(1); // Distance in km
+  const d = R * c;
+  return d;
 }
 
 export default function BusinessCard({
@@ -46,6 +47,13 @@ export default function BusinessCard({
       health: "from-teal-500 to-green-400",
     };
     return colors[business.category] || "from-amber-500 to-yellow-400";
+  };
+
+  // Format distance for display
+  const formatDistance = (dist) => {
+    if (dist === undefined || dist === null) return "";
+    if (dist < 1) return `${Math.round(dist * 1000)} m`;
+    return `${dist.toFixed(1)} km`;
   };
 
   // Grid view
@@ -116,7 +124,7 @@ export default function BusinessCard({
               {distance && (
                 <div className="mt-0.5 flex items-center text-[9px] font-medium text-amber-700">
                   <Navigation className="h-2 w-2 mr-0.5" />
-                  {distance} km
+                  {formatDistance(distance)}
                 </div>
               )}
 
@@ -181,7 +189,7 @@ export default function BusinessCard({
             {distance && (
               <div className="flex items-center text-[9px] font-medium text-amber-700 ml-1.5 flex-shrink-0">
                 <Navigation className="h-2 w-2 mr-0.5" />
-                {distance}
+                {formatDistance(distance)}
               </div>
             )}
           </div>
