@@ -197,16 +197,11 @@ export default function MapPage() {
         <br />
 
         {/* Mobile View Toggle Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="lg:hidden flex justify-center mb-3"
-        >
-          <div className="bg-white/90 rounded-full p-1 shadow-md flex">
+        <div className="lg:hidden flex justify-center mb-3">
+          <div className="bg-white rounded-full shadow-md p-1 border border-amber-100 flex">
             <button
               onClick={() => setMobileView("list")}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium flex items-center ${
+              className={`px-3 py-1.5 rounded-full text-sm flex items-center ${
                 mobileView === "list"
                   ? "bg-amber-500 text-white"
                   : "text-gray-700"
@@ -217,7 +212,7 @@ export default function MapPage() {
             </button>
             <button
               onClick={() => setMobileView("map")}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium flex items-center ${
+              className={`px-3 py-1.5 rounded-full text-sm flex items-center ${
                 mobileView === "map"
                   ? "bg-amber-500 text-white"
                   : "text-gray-700"
@@ -227,7 +222,7 @@ export default function MapPage() {
               Map
             </button>
           </div>
-        </motion.div>
+        </div>
 
         {/* Enhanced Map and Business listing container with improved sizing and layout */}
         <div className="flex-1 flex flex-col lg:flex-row gap-3 overflow-hidden">

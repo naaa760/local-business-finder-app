@@ -1,8 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { Search, Loader2 } from "lucide-react";
 
-export default function MapSearchBar({ onLocationSelect }) {
+export default function MapSearchBar({
+  onLocationSelect,
+  placeholder,
+  className,
+}) {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -25,6 +30,7 @@ export default function MapSearchBar({ onLocationSelect }) {
         console.log("Found location:", { lat, lon });
         onLocationSelect({ lat: parseFloat(lat), lng: parseFloat(lon) });
       } else {
+        console.log("Location not found");
         alert("Location not found. Please try a different search term.");
       }
     } catch (error) {
@@ -35,44 +41,61 @@ export default function MapSearchBar({ onLocationSelect }) {
     }
   };
 
+  const handleGetCurrentLocation = () => {
+    if (navigator.geolocation) {
+      setLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log("Got current location:", { latitude, longitude });
+          onLocationSelect({ lat: latitude, lng: longitude });
+          setLoading(false);
+        },
+        (error) => {
+          console.error("Error getting current location:", error);
+          alert(
+            "Could not get your current location. Please allow location access or try searching instead."
+          );
+          setLoading(false);
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
+
   return (
-    <form onSubmit={handleSearch} className="flex items-center mb-4">
-      <input
-        type="text"
-        placeholder="Search for a location..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="flex-1 px-4 py-2 border border-gray-300 rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <button
-        type="submit"
-        disabled={loading}
-        className="px-4 py-2 bg-blue-600 text-white rounded-r hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-blue-400"
-      >
-        {loading ? "Searching..." : "Search"}
-      </button>
+    <div className={className || "w-full"}>
+      <form onSubmit={handleSearch} className="relative flex">
+        <input
+          type="text"
+          placeholder={placeholder || "Search for a location..."}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full h-10 px-4 pr-10 py-2 rounded-l-full border border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-400"
+          disabled={loading}
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-amber-500 hover:bg-amber-600 text-white rounded-r-full px-4 flex items-center justify-center transition-colors"
+        >
+          {loading ? (
+            <Loader2 size={18} className="animate-spin" />
+          ) : (
+            <Search size={18} />
+          )}
+        </button>
+      </form>
+
       <button
         type="button"
-        onClick={() => {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                const { latitude, longitude } = position.coords;
-                onLocationSelect({ lat: latitude, lng: longitude });
-              },
-              (error) => {
-                console.error("Error getting current location:", error);
-                alert(
-                  "Could not get your current location. Please allow location access or try searching instead."
-                );
-              }
-            );
-          }
-        }}
-        className="ml-2 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+        onClick={handleGetCurrentLocation}
+        className="mt-2 text-xs text-amber-600 hover:text-amber-800 flex items-center justify-center w-full"
+        disabled={loading}
       >
-        Use My Location
+        {loading ? "Loading..." : "Use my current location"}
       </button>
-    </form>
+    </div>
   );
 }
