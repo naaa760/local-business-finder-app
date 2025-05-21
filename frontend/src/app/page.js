@@ -162,14 +162,8 @@ export default function HomePage() {
               <Star className="h-3 w-3 text-white" />
             </div>
             <span className="text-sm text-white">
-              We&apos;ve just launched our new location recommendation feature
+              I&apos;ve just launched our new location recommendation feature
             </span>
-            <Link
-              href="/features"
-              className="text-amber-300 hover:text-amber-200 text-sm flex items-center"
-            >
-              Learn more <ArrowUpRight className="h-3 w-3 ml-1" />
-            </Link>
           </div>
 
           {/* Hero section */}
@@ -558,8 +552,8 @@ export default function HomePage() {
                     Take LocalFinder With You
                   </h3>
                   <p className="mt-4 text-xl text-gray-500 max-w-2xl">
-                    Download our mobile app to discover local businesses
-                    wherever you go. Available for iOS and Android.
+                    This app is to discover local businesses wherever you go.
+                    Available for web for now.
                   </p>
                   <div className="mt-8 flex flex-col sm:flex-row gap-4">
                     <button className="flex items-center justify-center px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors shadow-lg">
@@ -570,20 +564,7 @@ export default function HomePage() {
                       >
                         <path d="M17.5781 12.0096C17.5781 11.0175 17.0098 10.1279 16.1328 9.66895L7.01562 4.54098C6.55664 4.28809 6.02539 4.20606 5.51758 4.30274C5.00977 4.39941 4.56055 4.6709 4.2627 5.07324C3.95508 5.48047 3.82812 5.99316 3.91211 6.49609C3.99609 6.99902 4.28125 7.44336 4.69336 7.73633L12.2109 12L4.69336 16.2637C4.28125 16.5566 3.99609 17.001 3.91211 17.5039C3.82812 18.0068 3.95508 18.5195 4.2627 18.9268C4.56055 19.3291 5.00977 19.6006 5.51758 19.6973C6.02539 19.7939 6.55664 19.7119 7.01562 19.459L16.1328 14.3311C17.0098 13.8721 17.5781 12.9824 17.5781 12.0096Z" />
                       </svg>
-                      App Store
-                    </button>
-                    <button className="flex items-center justify-center px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors shadow-lg">
-                      <svg
-                        className="h-6 w-6 mr-2"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M3.66211 3.61621C3.48633 3.79199 3.375 4.05078 3.375 4.375V19.625C3.375 19.9492 3.48633 20.208 3.66211 20.3838L3.72656 20.4482L12.5273 11.6475V11.3525L3.72656 2.55176L3.66211 3.61621Z" />
-                        <path d="M16.2188 14.9863L13.3711 12.1387V11.8613L16.2188 9.01367L16.2979 9.06348L19.6641 11.0312C20.625 11.5547 20.625 12.4453 19.6641 12.9688L16.2979 14.9365L16.2188 14.9863Z" />
-                        <path d="M16.2979 14.9365L13.3711 12L4.52148 20.8496C4.87305 21.1865 5.40625 21.2217 6.01367 20.8848L16.2979 14.9365Z" />
-                        <path d="M4.52148 3.15039L13.3711 12L16.2979 9.06348L6.01367 3.11523C5.40625 2.77832 4.87305 2.81348 4.52148 3.15039Z" />
-                      </svg>
-                      Google Play
+                      Web App
                     </button>
                   </div>
                 </div>
