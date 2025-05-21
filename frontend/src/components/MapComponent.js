@@ -21,7 +21,10 @@ import { motion } from "framer-motion";
 function ChangeView({ center }) {
   const map = useMap();
   useEffect(() => {
-    map.setView(center);
+    // Only call setView if center is defined and has lat/lng properties
+    if (center && center.lat !== undefined && center.lng !== undefined) {
+      map.setView(center);
+    }
   }, [center, map]);
   return null;
 }
@@ -226,6 +229,12 @@ export default function MapComponent({
     setSelectedBusiness(null);
   };
 
+  // Provide a default center if userLocation is undefined
+  const mapCenter =
+    userLocation && userLocation.lat
+      ? userLocation
+      : { lat: 40.7128, lng: -74.006 }; // Default to NYC
+
   if (!iconsReady) {
     return (
       <div className="w-full h-full bg-gradient-to-b from-amber-50 to-amber-100/50 animate-pulse rounded-2xl flex items-center justify-center">
@@ -294,7 +303,7 @@ export default function MapComponent({
       </div>
 
       <MapContainer
-        center={center}
+        center={mapCenter}
         zoom={14}
         style={{ height: "100%", width: "100%" }}
         whenCreated={setMap}
@@ -310,7 +319,9 @@ export default function MapComponent({
         <ZoomControl position="bottomright" />
         <MapStyle />
         <MapAttribution />
-        <ChangeView center={center} />
+        {userLocation && userLocation.lat && (
+          <ChangeView center={userLocation} />
+        )}
 
         {/* User location marker with pulse effect */}
         <Marker position={userLocation} icon={defaultIconRef.current}>

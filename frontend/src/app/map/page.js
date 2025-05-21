@@ -46,6 +46,7 @@ export default function MapPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [showMap, setShowMap] = useState(true);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Get user's location on mount
   useEffect(() => {
@@ -122,14 +123,14 @@ export default function MapPage() {
       <div className="fixed right-0 top-0 w-96 h-96 bg-gradient-radial from-yellow-400/20 to-transparent rounded-full -mr-48 -mt-48 blur-3xl z-1" />
       <div className="fixed left-10 bottom-10 w-64 h-64 bg-gradient-radial from-amber-500/10 to-transparent rounded-full blur-2xl z-1" />
 
-      {/* Main Content */}
-      <div className="relative z-10 px-2 sm:px-6 py-2 sm:py-4 max-w-[1440px] mx-auto">
+      {/* Main Content - Increased size and improved organization */}
+      <div className="relative z-10 px-2 sm:px-4 py-2 h-screen flex flex-col">
         {/* Enhanced mobile-friendly navbar */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.4 }}
-          className="rounded-full bg-white/90 backdrop-blur-xl border border-white/50 shadow-lg p-1.5 mb-3 sm:mb-4 flex items-center justify-between"
+          className="rounded-full bg-white/90 backdrop-blur-xl border border-white/50 shadow-lg p-1.5 mb-2 flex items-center justify-between"
         >
           <div className="flex items-center gap-1 px-2">
             <Link href="/" className="flex items-center">
@@ -161,236 +162,129 @@ export default function MapPage() {
             </div>
           </div>
         </motion.div>
-        <br />
+
         <br />
         <br />
 
-        {/* Enhanced beautiful Search Section */}
+        {/* Improved title and description - more compact but still beautiful */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="max-w-4xl mx-auto mb-4 sm:mb-8"
+          className="max-w-4xl mx-auto mb-2"
         >
-          <div className="text-center mb-3 sm:mb-6">
-            <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-amber-800 mb-2 sm:mb-4 tracking-tight">
-              <span className="relative inline-block px-1 py-1">
+          <div className="text-center mb-1">
+            <h1 className="text-xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-amber-800 tracking-tight">
+              <span className="relative inline-block px-1">
                 Discover Amazing Places
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full transform translate-y-1 opacity-80"></div>
-                <div className="absolute -bottom-1 left-4 right-4 h-[2px] bg-amber-300/50 rounded-full blur-[1px]"></div>
               </span>
             </h1>
-            <p className="text-gray-600 text-xs sm:text-sm md:text-base mb-4 sm:mb-6 max-w-xl mx-auto px-3 sm:px-0">
+
+            <br />
+
+            <p className="text-gray-600 text-xs sm:text-sm max-w-xl mx-auto px-3 sm:px-0">
               Find the best local businesses around you — from cozy cafes to
               hidden gems
             </p>
           </div>
+        </motion.div>
 
-          {/* Enhanced Search Bar with beautiful styling */}
-          <div className="bg-white/50 backdrop-blur-xl rounded-2xl p-6 border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
-              <div className="relative w-full md:flex-1">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"></div>
+        <br />
+        <br />
+
+        {/* Enhanced Map and Business listing container with improved sizing and layout */}
+        <div className="flex-1 flex flex-col lg:flex-row gap-3 overflow-hidden">
+          {/* Left: Business search and listing - larger and more organized */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="w-full lg:w-[420px] xl:w-[480px] h-full flex flex-col shadow-xl rounded-2xl bg-white/90 backdrop-blur-md overflow-hidden"
+          >
+            {/* Enhanced Search Bar with beautiful styling */}
+            <div className="bg-gradient-to-r from-amber-50 to-amber-100/50 p-4 border-b border-amber-100">
+              <div className="relative mb-3">
                 <MapSearchBar
                   onLocationSelect={setLocation}
                   placeholder="Search for a location..."
-                  className="w-full h-12 pl-12 pr-4 rounded-full border border-amber-200 bg-white/80 shadow-sm 
+                  className="w-full h-11 pl-4 pr-4 rounded-full border border-amber-200 bg-white/80 shadow-sm 
                     focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus:outline-none transition-all"
                 />
               </div>
             </div>
 
-            {/* Responsive Filters Section */}
-            <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-4 sm:p-6 shadow-lg border border-white/50 mb-6 sm:mb-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-                {/* Category Filter */}
-                <div className="relative">
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2 ml-1">
-                    Category
-                  </label>
-                  <select
-                    value={filters.category}
-                    onChange={(e) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        category: e.target.value,
-                      }))
-                    }
-                    className="w-full h-9 sm:h-11 px-3 sm:px-4 py-1 sm:py-2 text-sm rounded-lg border border-amber-200/70 bg-white/90 text-gray-700
-                      focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus:outline-none appearance-none
-                      bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%23d97706%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E')] 
-                      bg-[length:16px_16px] sm:bg-[length:20px_20px] bg-[right_8px_center] sm:bg-[right_10px_center] bg-no-repeat pr-8 sm:pr-10"
-                  >
-                    <option value="all">All Categories</option>
-                    <option value="restaurant">Restaurants</option>
-                    <option value="cafe">Cafes</option>
-                    <option value="bar">Bars</option>
-                    <option value="lodging">Hotels</option>
-                    <option value="shopping_mall">Shopping</option>
-                    <option value="tourist_attraction">Attractions</option>
-                  </select>
-                </div>
-
-                {/* Rating Filter - adjusted for mobile */}
-                <div className="relative">
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2 ml-1">
-                    Minimum Rating
-                  </label>
-                  <select
-                    value={filters.rating}
-                    onChange={(e) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        rating: Number(e.target.value),
-                      }))
-                    }
-                    className="w-full h-9 sm:h-11 px-3 sm:px-4 py-1 sm:py-2 text-sm rounded-lg border border-amber-200/70 bg-white/90 text-gray-700
-                      focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus:outline-none appearance-none
-                      bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%23d97706%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E')] 
-                      bg-[length:16px_16px] sm:bg-[length:20px_20px] bg-[right_8px_center] sm:bg-[right_10px_center] bg-no-repeat pr-8 sm:pr-10"
-                  >
-                    <option value="0">Any Rating</option>
-                    <option value="3">3+ Stars</option>
-                    <option value="4">4+ Stars</option>
-                    <option value="4.5">4.5+ Stars</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Error message display */}
-        {error && (
-          <div className="max-w-3xl mx-auto mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl shadow-sm">
-            <div className="flex items-center">
-              <svg
-                className="w-5 h-5 mr-2 text-red-500"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+            {/* Filters section - more compact but still functional */}
+            <div className="px-4 py-3 border-b border-amber-100">
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{
+                  height: filtersOpen ? "auto" : "0px",
+                  opacity: filtersOpen ? 1 : 0,
+                }}
+                className="overflow-hidden"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              {error}
-            </div>
-          </div>
-        )}
+                <BusinessFilters filters={filters} setFilters={setFilters} />
+              </motion.div>
 
-        {/* Map and Business List Container - mobile responsive */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="flex flex-col lg:flex-row gap-4 sm:gap-6 h-[calc(100vh-20rem)] sm:h-[calc(100vh-22rem)]"
-        >
-          {/* Mobile tabs for switching between map and list */}
-          <div className="lg:hidden flex mb-2 border border-amber-100 rounded-full p-1 bg-white/80 backdrop-blur-sm shadow-sm">
-            <button
-              onClick={() => setShowMap(true)}
-              className={`flex-1 py-1.5 px-3 rounded-full text-sm font-medium transition-colors ${
-                showMap ? "bg-amber-500 text-white" : "text-gray-700"
-              }`}
-            >
-              Map
-            </button>
-            <button
-              onClick={() => setShowMap(false)}
-              className={`flex-1 py-1.5 px-3 rounded-full text-sm font-medium transition-colors ${
-                !showMap ? "bg-amber-500 text-white" : "text-gray-700"
-              }`}
-            >
-              List
-            </button>
-          </div>
-
-          {/* Enhanced Map Container - only shown when map tab is active on mobile */}
-          <div
-            className={`flex-1 rounded-3xl overflow-hidden bg-white/40 backdrop-blur-xl border border-white/50 shadow-xl transition-all duration-300 hover:shadow-2xl ${
-              !showMap ? "hidden lg:block" : ""
-            }`}
-          >
-            <div className="h-full relative">
-              {loading && (
-                <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50 rounded-3xl">
-                  <div className="flex flex-col items-center">
-                    <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-amber-500 border-t-transparent" />
-                    <p className="mt-4 text-amber-800 font-medium animate-pulse text-sm sm:text-base">
-                      Discovering amazing places...
-                    </p>
-                  </div>
+              <button
+                onClick={() => setFiltersOpen(!filtersOpen)}
+                className="flex items-center justify-between w-full py-1.5 text-sm font-medium text-amber-700"
+              >
+                <span className="flex items-center">
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filters
+                </span>
+                <div
+                  className={`transform transition-transform ${
+                    filtersOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
                 </div>
-              )}
-
-              {location && (
-                <MapComponent
-                  center={location}
-                  businesses={businesses}
-                  userLocation={location}
-                  radius={filters.radius}
-                  className="h-full w-full rounded-3xl"
-                  onLoad={() => setMapLoaded(true)}
-                />
-              )}
-            </div>
-          </div>
-
-          {/* Enhanced Business List - only shown when list tab is active on mobile */}
-          <div
-            className={`w-full lg:w-[420px] flex flex-col rounded-3xl overflow-hidden bg-white/40 backdrop-blur-xl border border-white/50 shadow-xl transition-all duration-300 hover:shadow-2xl ${
-              showMap ? "hidden lg:flex" : ""
-            }`}
-          >
-            <div className="p-6 border-b border-amber-100/30 bg-white/60">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-800">
-                    Places Near You
-                  </h2>
-                  <p className="text-gray-600 mt-1">
-                    {businesses.length} amazing{" "}
-                    {businesses.length === 1 ? "place" : "places"} found
-                  </p>
-                </div>
-
-                {businesses.length > 0 && (
-                  <div className="flex items-center space-x-1 bg-amber-100/50 px-3 py-1 rounded-full">
-                    <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-                    <span className="text-sm font-medium text-amber-700">
-                      Top Rated
-                    </span>
-                  </div>
-                )}
-              </div>
+              </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto custom-scrollbar">
+            {/* Business listing - larger and more spacious */}
+            <div className="flex-1 overflow-hidden bg-amber-50/50">
               <BusinessList
                 businesses={businesses}
                 loading={loading}
                 userLocation={location}
               />
-
-              {businesses.length === 0 && !loading && (
-                <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-                  <div className="w-20 h-20 mb-4 rounded-full bg-amber-100 flex items-center justify-center">
-                    <MapPin className="h-10 w-10 text-amber-500" />
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-700 mb-2">
-                    No places found
-                  </h3>
-                  <p className="text-gray-500 max-w-xs">
-                    Try adjusting your filters or searching in a different
-                    location
-                  </p>
-                </div>
-              )}
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+
+          {/* Right: Map Component - Larger and more prominent */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="flex-1 bg-white/30 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden h-full border border-white/50"
+          >
+            <MapComponent
+              businesses={businesses}
+              userLocation={location}
+              onBusinessClick={(business) => {
+                // Handle business click if needed
+              }}
+              className="w-full h-full rounded-xl"
+            />
+          </motion.div>
+        </div>
       </div>
     </main>
   );
