@@ -90,6 +90,8 @@ export default function MapPage() {
     } catch (err) {
       console.error("Error searching businesses:", err);
       setError("Failed to load businesses. Please try again.");
+      // Don't empty the businesses array if the error is just with loading more data
+      // This helps maintain existing map data if there's a temporary API issue
     } finally {
       setLoading(false);
     }
