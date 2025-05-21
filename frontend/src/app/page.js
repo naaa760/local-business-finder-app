@@ -109,38 +109,38 @@ export default function HomePage() {
 
       {/* Header */}
       <header className="relative z-10 px-4 sm:px-6 lg:px-8 py-4">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-md rounded-full border border-white/20 px-4 py-2 flex items-center justify-between max-w-xl mx-auto">
-            <div className="flex items-center gap-2">
-              <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-1.5 rounded-lg">
-                <MapPin className="h-4 w-4" />
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white/10 backdrop-blur-md rounded-full border border-white/20 px-3 py-1.5 flex items-center justify-between max-w-sm mx-auto">
+            <div className="flex items-center gap-1.5">
+              <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-1 rounded-lg">
+                <MapPin className="h-3.5 w-3.5" />
               </div>
-              <span className="text-lg font-bold bg-gradient-to-r from-amber-400 to-amber-600 text-transparent bg-clip-text">
+              <span className="text-base font-bold bg-gradient-to-r from-amber-400 to-amber-600 text-transparent bg-clip-text">
                 LocalFinder
               </span>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <Link
                 href="/about"
-                className="px-3 py-1 rounded-full text-white hover:bg-white/10 transition-colors text-sm"
+                className="px-2 py-0.5 rounded-full text-white hover:bg-white/10 transition-colors text-xs"
               >
                 About
               </Link>
 
               {isSignedIn ? (
-                <div className="ml-1">
+                <div>
                   <UserButton afterSignOutUrl="/" />
                 </div>
               ) : (
                 <div className="flex items-center gap-1">
                   <SignInButton mode="modal">
-                    <button className="px-3 py-1 rounded-full text-sm text-white hover:bg-white/10 transition-colors">
+                    <button className="px-2 py-0.5 rounded-full text-xs text-white hover:bg-white/10 transition-colors">
                       Sign in
                     </button>
                   </SignInButton>
                   <SignUpButton mode="modal">
-                    <button className="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-full text-sm transition-colors">
+                    <button className="px-2 py-0.5 bg-amber-500 hover:bg-amber-600 text-white rounded-full text-xs transition-colors">
                       Get Started
                     </button>
                   </SignUpButton>
