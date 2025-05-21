@@ -3,6 +3,25 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Only fix horizontal scrolling without changing layout */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Make sure all containers respect viewport width */
+.container,
+main,
+section,
+div {
+  max-width: 100%;
+}
+
 :root {
   --primary-color: #3b82f6;
   --primary-hover: #2563eb;
@@ -50,6 +69,16 @@ body {
   color: var(--text-primary);
   background-color: var(--bg-light);
   font-family: "Inter", system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Fix for the main container on homepage */
+#__next,
+main {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 h1,
@@ -61,6 +90,13 @@ h6 {
   color: var(--text-primary);
   font-weight: 600;
   line-height: 1.3;
+}
+
+/* Make sure all images and containers fit within the viewport */
+img,
+video {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Better typography */
