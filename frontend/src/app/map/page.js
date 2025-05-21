@@ -214,26 +214,22 @@ export default function MapPage() {
               </div>
             </div>
 
-            {/* Filters section - more compact but still functional */}
-            <div className="px-4 py-3 border-b border-amber-100">
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{
-                  height: filtersOpen ? "auto" : "0px",
-                  opacity: filtersOpen ? 1 : 0,
-                }}
-                className="overflow-hidden"
-              >
-                <BusinessFilters filters={filters} setFilters={setFilters} />
-              </motion.div>
-
+            {/* Filters section - with better toggle and auto-close */}
+            <div className="px-4 py-2 border-b border-amber-100">
               <button
                 onClick={() => setFiltersOpen(!filtersOpen)}
                 className="flex items-center justify-between w-full py-1.5 text-sm font-medium text-amber-700"
               >
                 <span className="flex items-center">
                   <Filter className="h-4 w-4 mr-2" />
-                  Filters
+                  Filters{" "}
+                  {Object.values(filters).some(
+                    (val) => val !== "all" && val !== 0 && val !== 5
+                  ) && (
+                    <span className="ml-2 bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+                      Active
+                    </span>
+                  )}
                 </span>
                 <div
                   className={`transform transition-transform ${
@@ -256,6 +252,32 @@ export default function MapPage() {
                   </svg>
                 </div>
               </button>
+
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{
+                  height: filtersOpen ? "auto" : "0px",
+                  opacity: filtersOpen ? 1 : 0,
+                }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <BusinessFilters
+                  filters={filters}
+                  setFilters={(newFilters) => {
+                    setFilters(newFilters);
+                    // Only auto-close if explicitly selecting a category
+                    // Don't close when clearing filters
+                    if (
+                      newFilters.category !== "all" ||
+                      newFilters.rating !== filters.rating ||
+                      newFilters.radius !== filters.radius
+                    ) {
+                      setTimeout(() => setFiltersOpen(false), 300);
+                    }
+                  }}
+                />
+              </motion.div>
             </div>
 
             {/* Business listing - larger and more spacious */}
