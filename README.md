@@ -42,47 +42,6 @@ LocalFinder is a modern, location-based business discovery application that help
 - Google Places API key
 - Clerk account for authentication
 
-### Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/yourusername/localfinder.git
-   cd localfinder
-   ```
-
-2. **Set up the backend**
-
-   ```bash
-   cd backend
-   npm install
-   cp .env.example .env
-   # Edit .env with your MongoDB URI, Google API keys, etc.
-   ```
-
-3. **Set up the frontend**
-
-   ```bash
-   cd frontend
-   npm install
-   cp .env.example .env
-   # Edit .env with your API URL and Clerk keys
-   ```
-
-4. **Run the application**
-
-   ```bash
-   # Terminal 1 - Backend
-   cd backend
-   npm run dev
-
-   # Terminal 2 - Frontend
-   cd frontend
-   npm run dev
-   ```
-
-5. **Open your browser**
-   Visit `http://localhost:3000` to see the application
 
 ## 🖥️ Usage
 
@@ -90,7 +49,7 @@ LocalFinder is a modern, location-based business discovery application that help
 
    - Allow location access or search for a specific area
    - Use the category filters to narrow down results
-   - Adjust distance and rating filters as needed
+   - Adjust the distance and rating filters as needed
    - Click on map markers or list items to view details
 
 2. **Business Details**
@@ -104,16 +63,3 @@ LocalFinder is a modern, location-based business discovery application that help
    - Add and manage business listings
    - Respond to reviews
    - Update business information
-
-## 📁 Project Structure
-
-localfinder/
-├── frontend/ # Next.js frontend application
-│ ├── public/ # Static assets
-│ │ └── og-image.jpg
-│ ├── src/ # Source code
-│ │ ├── app/ # Next.js app router
-│ │ ├── components/ # Reusable UI components
-│ │ ├── utils
-│ │ └── ...
-│ └── ...
