@@ -1,6 +1,6 @@
 # 🌎 LocalFinder: Discover Local Businesses
 
-![LocalFinder Banner](public/og-image.jpg)
+https://local-business-finder-app-7db1.vercel.app
 
 ## 📌 Overview
 
