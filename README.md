@@ -1,4 +1,4 @@
-# 🌎 LocalFinder: Discover Local Businesses
+# 🌎 LocalFinder: Discover ANY Businesses Nearby or Far
 
 https://local-business-finder-app-7db1.vercel.app
 
