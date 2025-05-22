@@ -2,6 +2,9 @@
 
 https://local-business-finder-app-7db1.vercel.app
 
+![image](https://github.com/user-attachments/assets/aa4eddcd-71af-4076-87df-71676e020a25)
+
+
 ## 📌 Overview
 
 LocalFinder is a modern, location-based business discovery application that helps users quickly find and explore local establishments around them. Built with a sleek user interface and powerful location features, it makes discovering new places effortless and enjoyable.
