@@ -6,7 +6,7 @@ https://local-business-finder-app-7db1.vercel.app
 
 
 ❗This is the video link for this project:
-https://x.com/nehaaaa_6/status/1927288126004678913
+https://drive.google.com/file/d/1R8pR242fn-edmDCJt7Jb3eboMBP5j-0R/view?usp=drivesdk
 
 ## 📌 Overview
 
