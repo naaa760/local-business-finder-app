@@ -4,6 +4,7 @@ https://local-business-finder-app-7db1.vercel.app
 
 ![image](https://github.com/user-attachments/assets/aa4eddcd-71af-4076-87df-71676e020a25)
 
+https://www.canva.com/design/DAGonZwsvQw/U9k9SOodKAo-LVosDWvpIQ/edit?utm_content=DAGonZwsvQw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
 ## 📌 Overview
 
