@@ -15,26 +15,7 @@ import {
   Filter,
   Building,
   Heart,
-  Users,
-  Smartphone,
-  Zap,
-  Globe,
-  CheckCircle,
 } from "lucide-react";
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: "easeOut" },
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
 
 export default function HomePage() {
   const router = useRouter();
@@ -88,364 +69,533 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 w-full overflow-x-hidden">
-      {/* Navigation Bar - Fixed width */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-amber-100 sticky top-0 z-50 w-full overflow-x-hidden">
-        <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-          <div className="flex justify-between items-center h-14 sm:h-16">
-            {/* Logo */}
-            <Link
-              href="/"
-              className="flex items-center space-x-2 flex-shrink-0"
-            >
-              <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg flex items-center justify-center">
-                <MapPin className="h-4 w-4 text-white" />
+    <div className="min-h-screen bg-gradient-to-b from-white to-amber-50">
+      {/* Background slideshow */}
+      {backgroundImages.map((image, index) => (
+        <div
+          key={index}
+          className="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(${image})`,
+            opacity: index === currentImageIndex ? 1.3 : 0,
+            zIndex: index === currentImageIndex ? 1 : 0,
+          }}
+        />
+      ))}
+
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/40 z-[2]" />
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-900/20 to-amber-950/60 z-[3]" />
+
+      {/* Background decorations */}
+      <div
+        className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-radial from-amber-200/30 to-transparent rounded-full -mr-48 -mt-48 blur-3xl z-[4]"
+        style={{
+          transform: `translate(${mousePosition.x * 0.01}px, ${
+            mousePosition.y * 0.01
+          }px)`,
+        }}
+      />
+      <div
+        className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-radial from-amber-300/20 to-transparent rounded-full -ml-48 -mb-48 blur-3xl z-[4]"
+        style={{
+          transform: `translate(${mousePosition.x * -0.01}px, ${
+            mousePosition.y * -0.01
+          }px)`,
+        }}
+      />
+
+      {/* Header */}
+      <header className="relative z-10 px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white/10 backdrop-blur-md rounded-full border border-white/20 px-3 py-1.5 flex items-center justify-between max-w-sm mx-auto">
+            <div className="flex items-center gap-1.5">
+              <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-1 rounded-lg">
+                <MapPin className="h-3.5 w-3.5" />
               </div>
-              <span className="text-lg sm:text-xl font-bold text-gray-800 hidden sm:block">
+              <span className="text-base font-bold bg-gradient-to-r from-amber-400 to-amber-600 text-transparent bg-clip-text">
                 LocalFinder
               </span>
-              <span className="text-base font-bold text-gray-800 sm:hidden">
-                LF
-              </span>
-            </Link>
+            </div>
 
-            {/* Navigation Links */}
-            <div className="hidden md:flex items-center space-x-6">
+            <div className="flex items-center space-x-1">
               <Link
                 href="/about"
-                className="text-gray-600 hover:text-gray-800 transition-colors text-sm font-medium"
+                className="px-2 py-0.5 rounded-full text-white hover:bg-white/10 transition-colors text-xs"
               >
                 About
               </Link>
-              <Link
-                href="/contact"
-                className="text-gray-600 hover:text-gray-800 transition-colors text-sm font-medium"
-              >
-                Contact
-              </Link>
-            </div>
 
-            {/* Auth Buttons */}
-            <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-              {!isSignedIn ? (
-                <>
-                  <Link
-                    href="/sign-in"
-                    className="text-gray-600 hover:text-gray-800 transition-colors text-sm font-medium"
-                  >
-                    Sign in
-                  </Link>
-                  <Link
-                    href="/sign-up"
-                    className="bg-amber-500 hover:bg-amber-600 text-white px-3 sm:px-4 py-2 rounded-full text-sm font-medium transition-colors"
-                  >
-                    Get Started
-                  </Link>
-                </>
+              {isSignedIn ? (
+                <div>
+                  <UserButton afterSignOutUrl="/" />
+                </div>
               ) : (
-                <Link
-                  href="/map"
-                  className="bg-amber-500 hover:bg-amber-600 text-white px-3 sm:px-4 py-2 rounded-full text-sm font-medium transition-colors"
-                >
-                  Open Map
-                </Link>
+                <div className="flex items-center gap-1">
+                  <SignInButton mode="modal">
+                    <button className="px-2 py-0.5 rounded-full text-xs text-white hover:bg-white/10 transition-colors">
+                      Sign in
+                    </button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <button className="px-2 py-0.5 bg-amber-500 hover:bg-amber-600 text-white rounded-full text-xs transition-colors">
+                      Get Started
+                    </button>
+                  </SignUpButton>
+                </div>
               )}
             </div>
           </div>
         </div>
-      </nav>
+      </header>
 
-      {/* Hero Section */}
-      <section className="relative py-12 sm:py-16 lg:py-20 overflow-x-hidden">
-        <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            {/* Left Content */}
-            <motion.div
-              className="text-center lg:text-left max-w-full"
-              variants={fadeInUp}
-              initial="initial"
-              animate="animate"
-            >
-              {/* Announcement Badge - FIXED FOR MOBILE */}
-              <motion.div
-                className="inline-flex items-center px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-sm font-medium mb-6 max-w-full"
-                variants={fadeInUp}
-              >
-                <Zap className="h-4 w-4 mr-2 flex-shrink-0" />
-                <span className="hidden sm:inline">
-                  I&apos;ve just launched our new location recommendation
-                  feature
-                </span>
-                <span className="sm:hidden">
-                  New location feature launched!
-                </span>
-              </motion.div>
-
-              {/* Main Heading */}
-              <motion.h1
-                className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight"
-                variants={fadeInUp}
-              >
-                <span className="block">Turning your</span>
-                <span className="block">
-                  time into{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">
-                    Finder App
-                  </span>
-                </span>
-              </motion.h1>
-
-              {/* Description */}
-              <motion.p
-                className="text-base sm:text-lg lg:text-xl text-gray-600 mb-6 sm:mb-8 max-w-full lg:max-w-lg leading-relaxed"
-                variants={fadeInUp}
-              >
-                Find the best local businesses, restaurants, and services in
-                your area with real reviews from real people.
-              </motion.p>
-
-              {/* CTA Button */}
-              <motion.div variants={fadeInUp}>
-                <Link
-                  href="/map"
-                  className="inline-flex items-center bg-amber-500 hover:bg-amber-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                >
-                  <span>Explore Map</span>
-                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
-                </Link>
-              </motion.div>
-            </motion.div>
-
-            {/* Right Content - Hero Image */}
-            <motion.div
-              className="relative mt-8 lg:mt-0 max-w-full overflow-hidden"
-              variants={fadeInUp}
-              initial="initial"
-              animate="animate"
-            >
-              <div className="relative w-full h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden shadow-2xl">
-                <Image
-                  src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-                  alt="Restaurant interior showing LocalFinder in action"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </div>
-            </motion.div>
+      {/* Main content */}
+      <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto">
+          {/* Announcement banner */}
+          <div className="bg-white/10 backdrop-blur-md rounded-full px-4 py-1 mb-8 flex items-center justify-center space-x-2 border border-white/20 w-fit mx-auto">
+            <div className="bg-amber-500 rounded-full p-0.5">
+              <Star className="h-2.5 w-2.5 text-white" />
+            </div>
+            <span className="text-xs text-white whitespace-nowrap">
+              I&apos;ve just launched our new location recommendation feature
+            </span>
           </div>
-        </div>
 
-        {/* Floating Elements - Hidden on mobile */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none hidden lg:block">
-          <div className="absolute top-20 left-10 w-2 h-2 bg-amber-400 rounded-full animate-bounce" />
-          <div className="absolute top-40 right-20 w-3 h-3 bg-orange-400 rounded-full animate-bounce animation-delay-200" />
-          <div className="absolute bottom-20 left-20 w-2 h-2 bg-yellow-400 rounded-full animate-bounce animation-delay-400" />
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-white overflow-x-hidden">
-        <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-          {/* Section Header */}
+          {/* Hero section */}
           <motion.div
-            className="text-center mb-12 sm:mb-16 max-w-full"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-16"
           >
-            <motion.div
-              className="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs sm:text-sm font-medium mb-4"
-              variants={fadeInUp}
-            >
-              Discover Local Gems
-            </motion.div>
-            <motion.h2
-              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6"
-              variants={fadeInUp}
-            >
-              Featured Places
-            </motion.h2>
-            <motion.p
-              className="text-base sm:text-lg text-gray-600 max-w-full sm:max-w-2xl mx-auto"
-              variants={fadeInUp}
-            >
-              Experience the best local businesses handpicked for quality and
-              exceptional service
-            </motion.p>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white">
+              <span className="bg-gradient-to-r from-[#f5f5dc] to-[#5c4033] bg-clip-text text-transparent">
+                Turning your time into{" "}
+              </span>
+              <span className="bg-gradient-to-r from-orange-400 via-yellow-300 to-yellow-500 bg-clip-text text-transparent">
+                Finder App
+              </span>
+            </h1>
+
+            <p className="text-lg sm:text-xl text-white/80 max-w-3xl mx-auto mb-8">
+              Find the best local businesses, restaurants, and services in your
+              area with real reviews from real people.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                onClick={(e) => handleProtectedNavigation(e, "/map")}
+                className="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-colors shadow-lg hover:shadow-xl w-full sm:w-auto"
+              >
+                Explore Map
+              </button>
+            </div>
           </motion.div>
 
-          {/* Features Grid */}
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            {[
-              {
-                icon: Search,
-                title: "Smart Search",
-                description:
-                  "Find exactly what you're looking for with our intelligent search algorithms",
-                color: "from-blue-500 to-cyan-400",
-              },
-              {
-                icon: MapPin,
-                title: "Location-Based",
-                description:
-                  "Discover businesses and services right in your neighborhood",
-                color: "from-emerald-500 to-teal-400",
-              },
-              {
-                icon: Star,
-                title: "Verified Reviews",
-                description:
-                  "Read authentic reviews from real customers to make informed decisions",
-                color: "from-amber-500 to-yellow-400",
-              },
-              {
-                icon: Users,
-                title: "Community Driven",
-                description:
-                  "Join a community of locals sharing their favorite spots",
-                color: "from-purple-500 to-violet-400",
-              },
-              {
-                icon: Smartphone,
-                title: "Mobile First",
-                description:
-                  "Optimized for mobile devices for searching on the go",
-                color: "from-pink-500 to-rose-400",
-              },
-              {
-                icon: Heart,
-                title: "Save Favorites",
-                description:
-                  "Keep track of your favorite places and create personal lists",
-                color: "from-red-500 to-orange-400",
-              },
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                className="bg-white rounded-2xl p-6 sm:p-8 border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 max-w-full"
-                variants={fadeInUp}
-              >
-                <div
-                  className={`w-12 h-12 rounded-xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 sm:mb-6`}
-                >
-                  <feature.icon className="h-6 w-6 text-white" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                  {feature.description}
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+
+          {/* Featured places */}
+          <div className="py-24 relative">
+            {/* Background with pattern overlay */}
+            <div
+              className="absolute inset-0 z-0 opacity-10 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: "url('/b1.png')" }}
+            ></div>
+            <div className="absolute inset-0 z-0 opacity-5 bg-pattern-dots"></div>
+
+            {/* Animated decorative elements */}
+            <div className="absolute top-20 left-10 w-32 h-32 bg-amber-400 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
+            <div className="absolute bottom-20 right-10 w-40 h-40 bg-amber-500 rounded-full blur-[100px] opacity-20 animate-pulse-slow delay-1000"></div>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-16">
+                <span className="inline-block px-4 py-1 rounded-full bg-amber-100 text-amber-700 font-medium text-sm mb-3">
+                  Discover Local Gems
+                </span>
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+                  Featured Places<span className="text-amber-500">.</span>
+                </h2>
+                <p className="mt-4 max-w-2xl text-xl text-gray-600 mx-auto">
+                  Experience the best local businesses handpicked for quality
+                  and exceptional service
                 </p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-r from-amber-500 to-orange-500 overflow-x-hidden">
-        <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-          <motion.div
-            className="text-center max-w-full"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            <motion.h2
-              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 sm:mb-6"
-              variants={fadeInUp}
-            >
-              Ready to explore your neighborhood?
-            </motion.h2>
-            <motion.p
-              className="text-base sm:text-lg lg:text-xl text-amber-100 mb-6 sm:mb-8 max-w-full sm:max-w-2xl mx-auto"
-              variants={fadeInUp}
-            >
-              Join thousands of users who have discovered amazing local
-              businesses through LocalFinder.
-            </motion.p>
-            <motion.div variants={fadeInUp}>
-              <Link
-                href="/map"
-                className="inline-flex items-center bg-white text-amber-600 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold hover:bg-gray-50 transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              >
-                <span>Start Exploring</span>
-                <Globe className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
-              </Link>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8 sm:py-12 overflow-x-hidden">
-        <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            <div className="col-span-2 sm:col-span-1">
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg flex items-center justify-center">
-                  <MapPin className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-lg font-bold">LocalFinder</span>
               </div>
-              <p className="text-gray-400 text-sm leading-relaxed max-w-full">
-                Connecting people with amazing local businesses in their
-                communities.
-              </p>
-            </div>
 
-            <div>
-              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
-                Features
-              </h3>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li>Business Search</li>
-                <li>Interactive Maps</li>
-                <li>Reviews & Ratings</li>
-                <li>Mobile App</li>
-              </ul>
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                {featuredPlaces.map((place, index) => (
+                  <motion.div
+                    key={place.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                    viewport={{ once: true }}
+                    className="group rounded-2xl overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 border border-amber-100"
+                  >
+                    <div className="h-48 overflow-hidden relative">
+                      <Image
+                        src={place.image}
+                        alt={place.title}
+                        width={500}
+                        height={300}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute bottom-0 left-0 p-4 w-full">
+                        <div className="flex justify-between items-center">
+                          <span className="bg-amber-500/90 text-white px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm">
+                            Most Popular
+                          </span>
+                          <div className="flex items-center gap-1 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg">
+                            <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
+                            <span className="text-xs font-medium">
+                              {place.rating} ({place.reviews})
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-            <div>
-              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
-                Support
-              </h3>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li>Help Center</li>
-                <li>Contact Us</li>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-              </ul>
-            </div>
+                    <div className="p-5">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-amber-600 transition-colors">
+                        {place.title}
+                      </h3>
+                      <p className="text-gray-600 mb-4 line-clamp-2">
+                        {place.description}
+                      </p>
 
-            <div>
-              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
-                Connect
-              </h3>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li>Twitter</li>
-                <li>Facebook</li>
-                <li>Instagram</li>
-                <li>LinkedIn</li>
-              </ul>
+                      <div className="flex justify-between items-center">
+                        <Link href={`/business/${place.id}`}>
+                          <span className="inline-flex items-center text-amber-600 font-medium hover:text-amber-700 text-sm">
+                            View Details
+                            <ArrowRight className="ml-1 h-4 w-4" />
+                          </span>
+                        </Link>
+                        <button className="p-2 rounded-full bg-amber-50 text-amber-600 hover:bg-amber-100 transition-colors">
+                          <Heart className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="text-center">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-full hover:shadow-lg transition duration-300 font-medium inline-flex items-center"
+                  onClick={(e) => handleProtectedNavigation(e, "/map")}
+                >
+                  Explore All Places
+                  <ArrowUpRight className="ml-2 h-4 w-4" />
+                </motion.button>
+              </div>
             </div>
           </div>
 
-          <div className="border-t border-gray-800 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center text-gray-400 text-sm">
-            <p>&copy; 2024 LocalFinder. All rights reserved.</p>
+          {/* ===== HOW IT WORKS SECTION - ENHANCED ===== */}
+          <div className="py-24 relative bg-gradient-to-b from-white to-amber-50/50">
+            {/* Custom background elements */}
+            <div className="absolute inset-0 overflow-hidden">
+              <svg
+                className="absolute left-0 top-0 h-full w-full"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <pattern
+                    id="grid-pattern"
+                    width="40"
+                    height="40"
+                    patternUnits="userSpaceOnUse"
+                  >
+                    <path
+                      d="M0 40L40 0M0 0L40 40"
+                      stroke="rgba(251, 191, 36, 0.1)"
+                      strokeWidth="1"
+                      fill="none"
+                    />
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid-pattern)" />
+              </svg>
+            </div>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-16">
+                <span className="inline-block px-4 py-1 rounded-full bg-amber-100 text-amber-700 font-medium text-sm mb-3">
+                  Simple Process
+                </span>
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+                  How LocalFinder Works<span className="text-amber-500">.</span>
+                </h2>
+                <p className="mt-4 max-w-2xl text-xl text-gray-600 mx-auto">
+                  Find, discover, and connect with local businesses in just
+                  three simple steps
+                </p>
+              </div>
+
+              {/* Super simple map image - positioned to right side, no styling */}
+              <div className="flex justify-end mb-8">
+                <div className="transform rotate-3">
+                  <Image
+                    src="/map.png"
+                    alt="Map"
+                    width={200}
+                    height={200}
+                    className="max-w-[160px]"
+                  />
+                </div>
+              </div>
+
+              <div className="relative">
+                {/* Connecting line between steps */}
+                <div
+                  className="absolute top-1/2 left-0 w-full h-1 bg-amber-200 hidden md:block"
+                  style={{ transform: "translateY(-50%)" }}
+                ></div>
+
+                <div className="grid grid-cols-1 gap-12 md:grid-cols-3 relative">
+                  {[
+                    {
+                      step: 1,
+                      icon: <MapPin className="h-8 w-8" />,
+                      title: "Share Your Location",
+                      description:
+                        "Allow the app to use your location or search for an area you're interested in exploring",
+                    },
+                    {
+                      step: 2,
+                      icon: <Filter className="h-8 w-8" />,
+                      title: "Apply Filters",
+                      description:
+                        "Filter by category, rating, or distance to find exactly what you're looking for",
+                    },
+                    {
+                      step: 3,
+                      icon: <Star className="h-8 w-8" />,
+                      title: "Discover & Review",
+                      description:
+                        "Explore businesses, read reviews, and share your own experiences with the community",
+                    },
+                  ].map((item, index) => (
+                    <motion.div
+                      key={item.step}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.2 }}
+                      viewport={{ once: true }}
+                      className="relative"
+                    >
+                      <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-amber-100 hover:shadow-2xl hover:border-amber-200 transition-all duration-300">
+                        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
+                          <div className="w-14 h-14 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 flex items-center justify-center text-white font-bold text-xl shadow-lg z-20 relative">
+                            {item.step}
+                          </div>
+                        </div>
+
+                        <div className="pt-12 p-6 text-center">
+                          <div className="rounded-xl bg-amber-100 p-4 inline-flex items-center justify-center mb-6 text-amber-600">
+                            {item.icon}
+                          </div>
+                          <h3 className="text-xl font-bold text-gray-900 mb-3">
+                            {item.title}
+                          </h3>
+                          <p className="text-gray-600">{item.description}</p>
+                        </div>
+
+                        <div className="bg-gradient-to-r from-amber-500/5 to-amber-500/10 p-4 text-center">
+                          {index === 0 && (
+                            <span className="text-amber-700 text-sm font-medium">
+                              Start Here
+                            </span>
+                          )}
+                          {index === 2 && (
+                            <span className="text-amber-700 text-sm font-medium">
+                              Enjoy!
+                            </span>
+                          )}
+                          {index === 1 && (
+                            <span className="text-amber-700 text-sm font-medium">
+                              Customize Your Search
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-16 text-center">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition duration-300 font-medium inline-flex items-center"
+                  onClick={(e) => handleProtectedNavigation(e, "/map")}
+                >
+                  Get Started Now
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </motion.button>
+              </div>
+            </div>
+          </div>
+
+          {/* ===== NEW SECTION: TESTIMONIALS ===== */}
+          <div className="py-20 bg-gradient-to-b from-white to-amber-50 relative">
+            {/* Background image */}
+            <div
+              className="absolute inset-0 z-0 opacity-10 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: "url('/b4.png')" }}
+            ></div>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-16">
+                <h2 className="text-base font-semibold text-amber-600 tracking-wide uppercase">
+                  What People Say
+                </h2>
+                <h3 className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
+                  Testimonials from Our Users
+                </h3>
+                <p className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                  See how LocalFinder is helping people discover amazing places
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[
+                  {
+                    name: "Sarah Johnson",
+                    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+                    role: "Food Blogger",
+                    content:
+                      "LocalFinder has completely changed how I discover new restaurants. The filtering options are perfect, and I love how I can see ratings at a glance!",
+                  },
+                  {
+                    name: "Michael Chen",
+                    avatar: "https://randomuser.me/api/portraits/men/67.jpg",
+                    role: "Business Traveler",
+                    content:
+                      "As someone who travels frequently, this app has been a lifesaver. I can quickly find healthcare services or great restaurants no matter where I am.",
+                  },
+                  {
+                    name: "Emily Rodriguez",
+                    avatar: "https://randomuser.me/api/portraits/women/33.jpg",
+                    role: "Shop Owner",
+                    content:
+                      "The business dashboard has helped me connect with so many new customers. The analytics insights are incredibly valuable for my small business.",
+                  },
+                ].map((testimonial, index) => (
+                  <motion.div
+                    key={testimonial.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.2 }}
+                    viewport={{ once: true }}
+                    className="bg-white p-6 rounded-xl shadow-soft border border-gray-100"
+                  >
+                    <div className="flex items-center mb-4">
+                      <div className="h-12 w-12 rounded-full overflow-hidden mr-4">
+                        <Image
+                          src={testimonial.avatar}
+                          alt={testimonial.name}
+                          width={48}
+                          height={48}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900">
+                          {testimonial.name}
+                        </h4>
+                        <p className="text-sm text-gray-500">
+                          {testimonial.role}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className="inline-block h-4 w-4 fill-amber-400 text-amber-400 mr-1"
+                        />
+                      ))}
+                    </div>
+                    <p className="text-gray-600">{testimonial.content}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ===== NEW SECTION: APP PREVIEW ===== */}
+          <div className="py-20 bg-white relative">
+            {/* Background image */}
+            <div
+              className="absolute inset-0 z-0 opacity-15 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: "url('/b5.png')" }}
+            ></div>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="md:flex items-center justify-between">
+                <div className="md:w-1/2 mb-12 md:mb-0 pr-0 md:pr-16">
+                  <h2 className="text-base font-semibold text-amber-600 tracking-wide uppercase">
+                    Get The App
+                  </h2>
+                  <h3 className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
+                    Take LocalFinder With You
+                  </h3>
+                  <p className="mt-4 text-xl text-gray-500 max-w-2xl">
+                    This app is to discover local businesses wherever you go.
+                    Available for web for now.
+                  </p>
+                  <div className="mt-8 flex flex-col sm:flex-row gap-4">
+                    <button className="flex items-center justify-center px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors shadow-lg">
+                      <svg
+                        className="h-6 w-6 mr-2"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M17.5781 12.0096C17.5781 11.0175 17.0098 10.1279 16.1328 9.66895L7.01562 4.54098C6.55664 4.28809 6.02539 4.20606 5.51758 4.30274C5.00977 4.39941 4.56055 4.6709 4.2627 5.07324C3.95508 5.48047 3.82812 5.99316 3.91211 6.49609C3.99609 6.99902 4.28125 7.44336 4.69336 7.73633L12.2109 12L4.69336 16.2637C4.28125 16.5566 3.99609 17.001 3.91211 17.5039C3.82812 18.0068 3.95508 18.5195 4.2627 18.9268C4.56055 19.3291 5.00977 19.6006 5.51758 19.6973C6.02539 19.7939 6.55664 19.7119 7.01562 19.459L16.1328 14.3311C17.0098 13.8721 17.5781 12.9824 17.5781 12.0096Z" />
+                      </svg>
+                      Web App
+                    </button>
+                  </div>
+                </div>
+
+                <div className="md:w-1/2 relative">
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true }}
+                    className="relative mx-auto md:ml-auto md:mr-0 w-64 h-[500px] bg-gray-900 rounded-[36px] border-[8px] border-gray-800 shadow-2xl overflow-hidden"
+                  >
+                    <div className="absolute top-0 left-0 right-0 h-6 bg-gray-800 rounded-t-2xl"></div>
+                    <div className="h-full w-full overflow-hidden">
+                      <Image
+                        src="/app-preview.jpg"
+                        alt="Mobile App Preview"
+                        width={320}
+                        height={650}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-1/3 h-1 bg-gray-700 rounded-full"></div>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </footer>
+      </div>
 
       {/* Authentication Modal */}
       {showAuthModal && (
