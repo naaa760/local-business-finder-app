@@ -69,7 +69,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-amber-50">
+    <div className="min-h-screen bg-gradient-to-b from-white to-amber-50 overflow-x-hidden">
       {/* Background slideshow */}
       {backgroundImages.map((image, index) => (
         <div
@@ -89,9 +89,9 @@ export default function HomePage() {
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-900/20 to-amber-950/60 z-[3]" />
 
-      {/* Background decorations */}
+      {/* Background decorations - Hidden on mobile to prevent overflow */}
       <div
-        className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-radial from-amber-200/30 to-transparent rounded-full -mr-48 -mt-48 blur-3xl z-[4]"
+        className="hidden lg:block absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-radial from-amber-200/30 to-transparent rounded-full -mr-32 -mt-32 blur-3xl z-[4]"
         style={{
           transform: `translate(${mousePosition.x * 0.01}px, ${
             mousePosition.y * 0.01
@@ -99,7 +99,7 @@ export default function HomePage() {
         }}
       />
       <div
-        className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-radial from-amber-300/20 to-transparent rounded-full -ml-48 -mb-48 blur-3xl z-[4]"
+        className="hidden lg:block absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-radial from-amber-300/20 to-transparent rounded-full -ml-32 -mb-32 blur-3xl z-[4]"
         style={{
           transform: `translate(${mousePosition.x * -0.01}px, ${
             mousePosition.y * -0.01
@@ -108,14 +108,14 @@ export default function HomePage() {
       />
 
       {/* Header */}
-      <header className="relative z-10 px-4 sm:px-6 lg:px-8 py-4">
+      <header className="relative z-10 px-3 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="max-w-2xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-md rounded-full border border-white/20 px-3 py-1.5 flex items-center justify-between max-w-sm mx-auto">
+          <div className="bg-white/10 backdrop-blur-md rounded-full border border-white/20 px-2 sm:px-3 py-1.5 flex items-center justify-between w-full max-w-sm mx-auto">
             <div className="flex items-center gap-1.5">
               <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-1 rounded-lg">
-                <MapPin className="h-3.5 w-3.5" />
+                <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
               </div>
-              <span className="text-base font-bold bg-gradient-to-r from-amber-400 to-amber-600 text-transparent bg-clip-text">
+              <span className="text-sm sm:text-base font-bold bg-gradient-to-r from-amber-400 to-amber-600 text-transparent bg-clip-text">
                 LocalFinder
               </span>
             </div>
@@ -152,14 +152,14 @@ export default function HomePage() {
       </header>
 
       {/* Main content */}
-      <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+      <div className="relative z-10 px-3 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20">
         <div className="max-w-7xl mx-auto">
           {/* Announcement banner */}
-          <div className="bg-white/10 backdrop-blur-md rounded-full px-4 py-1 mb-8 flex items-center justify-center space-x-2 border border-white/20 w-fit mx-auto">
+          <div className="bg-white/10 backdrop-blur-md rounded-full px-3 sm:px-4 py-1 mb-6 sm:mb-8 flex items-center justify-center space-x-2 border border-white/20 w-fit mx-auto">
             <div className="bg-amber-500 rounded-full p-0.5">
-              <Star className="h-2.5 w-2.5 text-white" />
+              <Star className="h-2 w-2 sm:h-2.5 sm:w-2.5 text-white" />
             </div>
-            <span className="text-xs text-white whitespace-nowrap">
+            <span className="text-xs text-white text-center">
               I&apos;ve just launched our new location recommendation feature
             </span>
           </div>
@@ -169,9 +169,9 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-16"
+            className="text-center mb-12 sm:mb-16"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-white px-2">
               <span className="bg-gradient-to-r from-[#f5f5dc] to-[#5c4033] bg-clip-text text-transparent">
                 Turning your time into{" "}
               </span>
@@ -180,55 +180,51 @@ export default function HomePage() {
               </span>
             </h1>
 
-            <p className="text-lg sm:text-xl text-white/80 max-w-3xl mx-auto mb-8">
+            <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-3xl mx-auto mb-6 sm:mb-8 px-4">
               Find the best local businesses, restaurants, and services in your
               area with real reviews from real people.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col items-center justify-center px-4">
               <button
                 onClick={(e) => handleProtectedNavigation(e, "/map")}
-                className="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-colors shadow-lg hover:shadow-xl w-full sm:w-auto"
+                className="px-6 sm:px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-colors shadow-lg hover:shadow-xl w-full max-w-xs sm:w-auto"
               >
                 Explore Map
               </button>
             </div>
           </motion.div>
 
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
+          {/* Spacer - Reduced on mobile */}
+          <div className="py-8 sm:py-12 lg:py-24" />
 
           {/* Featured places */}
-          <div className="py-24 relative">
-            {/* Background with pattern overlay */}
+          <div className="py-12 sm:py-16 lg:py-24 relative">
+            {/* Background with pattern overlay - Hidden on mobile */}
             <div
-              className="absolute inset-0 z-0 opacity-10 bg-cover bg-center bg-no-repeat"
+              className="hidden sm:block absolute inset-0 z-0 opacity-10 bg-cover bg-center bg-no-repeat"
               style={{ backgroundImage: "url('/b1.png')" }}
             ></div>
-            <div className="absolute inset-0 z-0 opacity-5 bg-pattern-dots"></div>
+            <div className="hidden sm:block absolute inset-0 z-0 opacity-5 bg-pattern-dots"></div>
 
-            {/* Animated decorative elements */}
-            <div className="absolute top-20 left-10 w-32 h-32 bg-amber-400 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
-            <div className="absolute bottom-20 right-10 w-40 h-40 bg-amber-500 rounded-full blur-[100px] opacity-20 animate-pulse-slow delay-1000"></div>
+            {/* Animated decorative elements - Hidden on mobile */}
+            <div className="hidden lg:block absolute top-20 left-10 w-32 h-32 bg-amber-400 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
+            <div className="hidden lg:block absolute bottom-20 right-10 w-40 h-40 bg-amber-500 rounded-full blur-[100px] opacity-20 animate-pulse-slow delay-1000"></div>
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-16">
+              <div className="text-center mb-12 sm:mb-16">
                 <span className="inline-block px-4 py-1 rounded-full bg-amber-100 text-amber-700 font-medium text-sm mb-3">
                   Discover Local Gems
                 </span>
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
                   Featured Places<span className="text-amber-500">.</span>
                 </h2>
-                <p className="mt-4 max-w-2xl text-xl text-gray-600 mx-auto">
+                <p className="mt-4 max-w-2xl text-lg sm:text-xl text-gray-600 mx-auto px-4">
                   Experience the best local businesses handpicked for quality
                   and exceptional service
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
                 {featuredPlaces.map((place, index) => (
                   <motion.div
                     key={place.id}
@@ -302,9 +298,9 @@ export default function HomePage() {
           </div>
 
           {/* ===== HOW IT WORKS SECTION - ENHANCED ===== */}
-          <div className="py-24 relative bg-gradient-to-b from-white to-amber-50/50">
-            {/* Custom background elements */}
-            <div className="absolute inset-0 overflow-hidden">
+          <div className="py-12 sm:py-16 lg:py-24 relative bg-gradient-to-b from-white to-amber-50/50">
+            {/* Custom background elements - Hidden on small screens */}
+            <div className="hidden md:block absolute inset-0 overflow-hidden">
               <svg
                 className="absolute left-0 top-0 h-full w-full"
                 xmlns="http://www.w3.org/2000/svg"
@@ -329,58 +325,58 @@ export default function HomePage() {
             </div>
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-16">
+              <div className="text-center mb-12 sm:mb-16">
                 <span className="inline-block px-4 py-1 rounded-full bg-amber-100 text-amber-700 font-medium text-sm mb-3">
                   Simple Process
                 </span>
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
                   How LocalFinder Works<span className="text-amber-500">.</span>
                 </h2>
-                <p className="mt-4 max-w-2xl text-xl text-gray-600 mx-auto">
+                <p className="mt-4 max-w-2xl text-lg sm:text-xl text-gray-600 mx-auto px-4">
                   Find, discover, and connect with local businesses in just
                   three simple steps
                 </p>
               </div>
 
-              {/* Super simple map image - positioned to right side, no styling */}
-              <div className="flex justify-end mb-8">
+              {/* Map image - Hidden on mobile, smaller on tablet */}
+              <div className="hidden sm:flex justify-end mb-8">
                 <div className="transform rotate-3">
                   <Image
                     src="/map.png"
                     alt="Map"
                     width={200}
                     height={200}
-                    className="max-w-[160px]"
+                    className="max-w-[120px] sm:max-w-[160px]"
                   />
                 </div>
               </div>
 
               <div className="relative">
-                {/* Connecting line between steps */}
+                {/* Connecting line between steps - Hidden on mobile */}
                 <div
-                  className="absolute top-1/2 left-0 w-full h-1 bg-amber-200 hidden md:block"
+                  className="absolute top-1/2 left-0 w-full h-1 bg-amber-200 hidden lg:block"
                   style={{ transform: "translateY(-50%)" }}
                 ></div>
 
-                <div className="grid grid-cols-1 gap-12 md:grid-cols-3 relative">
+                <div className="grid grid-cols-1 gap-8 sm:gap-12 md:grid-cols-3 relative">
                   {[
                     {
                       step: 1,
-                      icon: <MapPin className="h-8 w-8" />,
+                      icon: <MapPin className="h-6 w-6 sm:h-8 sm:w-8" />,
                       title: "Share Your Location",
                       description:
                         "Allow the app to use your location or search for an area you're interested in exploring",
                     },
                     {
                       step: 2,
-                      icon: <Filter className="h-8 w-8" />,
+                      icon: <Filter className="h-6 w-6 sm:h-8 sm:w-8" />,
                       title: "Apply Filters",
                       description:
                         "Filter by category, rating, or distance to find exactly what you're looking for",
                     },
                     {
                       step: 3,
-                      icon: <Star className="h-8 w-8" />,
+                      icon: <Star className="h-6 w-6 sm:h-8 sm:w-8" />,
                       title: "Discover & Review",
                       description:
                         "Explore businesses, read reviews, and share your own experiences with the community",
@@ -396,34 +392,36 @@ export default function HomePage() {
                     >
                       <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-amber-100 hover:shadow-2xl hover:border-amber-200 transition-all duration-300">
                         <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
-                          <div className="w-14 h-14 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 flex items-center justify-center text-white font-bold text-xl shadow-lg z-20 relative">
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-lg z-20 relative">
                             {item.step}
                           </div>
                         </div>
 
-                        <div className="pt-12 p-6 text-center">
-                          <div className="rounded-xl bg-amber-100 p-4 inline-flex items-center justify-center mb-6 text-amber-600">
+                        <div className="pt-10 sm:pt-12 p-4 sm:p-6 text-center">
+                          <div className="rounded-xl bg-amber-100 p-3 sm:p-4 inline-flex items-center justify-center mb-4 sm:mb-6 text-amber-600">
                             {item.icon}
                           </div>
-                          <h3 className="text-xl font-bold text-gray-900 mb-3">
+                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">
                             {item.title}
                           </h3>
-                          <p className="text-gray-600">{item.description}</p>
+                          <p className="text-gray-600 text-sm sm:text-base">
+                            {item.description}
+                          </p>
                         </div>
 
-                        <div className="bg-gradient-to-r from-amber-500/5 to-amber-500/10 p-4 text-center">
+                        <div className="bg-gradient-to-r from-amber-500/5 to-amber-500/10 p-3 sm:p-4 text-center">
                           {index === 0 && (
-                            <span className="text-amber-700 text-sm font-medium">
+                            <span className="text-amber-700 text-xs sm:text-sm font-medium">
                               Start Here
                             </span>
                           )}
                           {index === 2 && (
-                            <span className="text-amber-700 text-sm font-medium">
+                            <span className="text-amber-700 text-xs sm:text-sm font-medium">
                               Enjoy!
                             </span>
                           )}
                           {index === 1 && (
-                            <span className="text-amber-700 text-sm font-medium">
+                            <span className="text-amber-700 text-xs sm:text-sm font-medium">
                               Customize Your Search
                             </span>
                           )}
@@ -434,7 +432,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="mt-16 text-center">
+              <div className="mt-12 sm:mt-16 text-center">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
@@ -449,27 +447,27 @@ export default function HomePage() {
           </div>
 
           {/* ===== NEW SECTION: TESTIMONIALS ===== */}
-          <div className="py-20 bg-gradient-to-b from-white to-amber-50 relative">
-            {/* Background image */}
+          <div className="py-12 sm:py-16 lg:py-20 bg-gradient-to-b from-white to-amber-50 relative">
+            {/* Background image - Hidden on mobile */}
             <div
-              className="absolute inset-0 z-0 opacity-10 bg-cover bg-center bg-no-repeat"
+              className="hidden sm:block absolute inset-0 z-0 opacity-10 bg-cover bg-center bg-no-repeat"
               style={{ backgroundImage: "url('/b4.png')" }}
             ></div>
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-16">
+              <div className="text-center mb-12 sm:mb-16">
                 <h2 className="text-base font-semibold text-amber-600 tracking-wide uppercase">
                   What People Say
                 </h2>
-                <h3 className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
+                <h3 className="mt-2 text-2xl sm:text-3xl md:text-4xl leading-8 font-bold tracking-tight text-gray-900">
                   Testimonials from Our Users
                 </h3>
-                <p className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                <p className="mt-4 max-w-2xl text-lg sm:text-xl text-gray-500 mx-auto px-4">
                   See how LocalFinder is helping people discover amazing places
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 {[
                   {
                     name: "Sarah Johnson",
@@ -499,10 +497,10 @@ export default function HomePage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.2 }}
                     viewport={{ once: true }}
-                    className="bg-white p-6 rounded-xl shadow-soft border border-gray-100"
+                    className="bg-white p-4 sm:p-6 rounded-xl shadow-soft border border-gray-100"
                   >
                     <div className="flex items-center mb-4">
-                      <div className="h-12 w-12 rounded-full overflow-hidden mr-4">
+                      <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden mr-4">
                         <Image
                           src={testimonial.avatar}
                           alt={testimonial.name}
@@ -512,10 +510,10 @@ export default function HomePage() {
                         />
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-900">
+                        <h4 className="font-medium text-gray-900 text-sm sm:text-base">
                           {testimonial.name}
                         </h4>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-xs sm:text-sm text-gray-500">
                           {testimonial.role}
                         </p>
                       </div>
@@ -524,11 +522,13 @@ export default function HomePage() {
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className="inline-block h-4 w-4 fill-amber-400 text-amber-400 mr-1"
+                          className="inline-block h-3 w-3 sm:h-4 sm:w-4 fill-amber-400 text-amber-400 mr-1"
                         />
                       ))}
                     </div>
-                    <p className="text-gray-600">{testimonial.content}</p>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      {testimonial.content}
+                    </p>
                   </motion.div>
                 ))}
               </div>
@@ -536,30 +536,30 @@ export default function HomePage() {
           </div>
 
           {/* ===== NEW SECTION: APP PREVIEW ===== */}
-          <div className="py-20 bg-white relative">
-            {/* Background image */}
+          <div className="py-12 sm:py-16 lg:py-20 bg-white relative">
+            {/* Background image - Hidden on mobile */}
             <div
-              className="absolute inset-0 z-0 opacity-15 bg-cover bg-center bg-no-repeat"
+              className="hidden sm:block absolute inset-0 z-0 opacity-15 bg-cover bg-center bg-no-repeat"
               style={{ backgroundImage: "url('/b5.png')" }}
             ></div>
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="md:flex items-center justify-between">
-                <div className="md:w-1/2 mb-12 md:mb-0 pr-0 md:pr-16">
+                <div className="md:w-1/2 mb-8 sm:mb-12 md:mb-0 pr-0 md:pr-16">
                   <h2 className="text-base font-semibold text-amber-600 tracking-wide uppercase">
                     Get The App
                   </h2>
-                  <h3 className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
+                  <h3 className="mt-2 text-2xl sm:text-3xl md:text-4xl leading-8 font-bold tracking-tight text-gray-900">
                     Take LocalFinder With You
                   </h3>
-                  <p className="mt-4 text-xl text-gray-500 max-w-2xl">
+                  <p className="mt-4 text-lg sm:text-xl text-gray-500 max-w-2xl">
                     This app is to discover local businesses wherever you go.
                     Available for web for now.
                   </p>
-                  <div className="mt-8 flex flex-col sm:flex-row gap-4">
+                  <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-4">
                     <button className="flex items-center justify-center px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors shadow-lg">
                       <svg
-                        className="h-6 w-6 mr-2"
+                        className="h-5 w-5 sm:h-6 sm:w-6 mr-2"
                         viewBox="0 0 24 24"
                         fill="currentColor"
                       >
@@ -570,15 +570,15 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="md:w-1/2 relative">
+                <div className="md:w-1/2 relative flex justify-center">
                   <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
-                    className="relative mx-auto md:ml-auto md:mr-0 w-64 h-[500px] bg-gray-900 rounded-[36px] border-[8px] border-gray-800 shadow-2xl overflow-hidden"
+                    className="relative w-48 h-[380px] sm:w-64 sm:h-[500px] bg-gray-900 rounded-[24px] sm:rounded-[36px] border-[6px] sm:border-[8px] border-gray-800 shadow-2xl overflow-hidden"
                   >
-                    <div className="absolute top-0 left-0 right-0 h-6 bg-gray-800 rounded-t-2xl"></div>
+                    <div className="absolute top-0 left-0 right-0 h-4 sm:h-6 bg-gray-800 rounded-t-lg sm:rounded-t-2xl"></div>
                     <div className="h-full w-full overflow-hidden">
                       <Image
                         src="/app-preview.jpg"
@@ -588,7 +588,7 @@ export default function HomePage() {
                         className="h-full w-full object-cover"
                       />
                     </div>
-                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-1/3 h-1 bg-gray-700 rounded-full"></div>
+                    <div className="absolute bottom-1 sm:bottom-2 left-1/2 transform -translate-x-1/2 w-1/3 h-0.5 sm:h-1 bg-gray-700 rounded-full"></div>
                   </motion.div>
                 </div>
               </div>
@@ -599,16 +599,16 @@ export default function HomePage() {
 
       {/* Authentication Modal */}
       {showAuthModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
               Sign In Required
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 mb-6 text-sm sm:text-base">
               Please sign in or create an account to access the map and discover
               local businesses.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 mt-6">
+            <div className="flex flex-col gap-3 sm:gap-4 mt-6">
               <SignInButton mode="modal">
                 <button className="w-full px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-medium">
                   Sign In
