@@ -3,6 +3,32 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* HORIZONTAL SCROLL FIX - Add these rules */
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Prevent any element from causing horizontal scroll */
+*,
+*::before,
+*::after {
+  max-width: 100vw;
+}
+
+/* Fix for containers and main elements */
+.container,
+main,
+section,
+div,
+header,
+footer {
+  overflow-x: hidden;
+}
+
 /* Only fix horizontal scrolling without changing layout */
 html,
 body {
