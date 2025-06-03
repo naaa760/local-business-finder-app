@@ -19,6 +19,7 @@ import {
   Smartphone,
   Zap,
   Globe,
+  CheckCircle,
 } from "lucide-react";
 
 const fadeInUp = {
@@ -165,14 +166,18 @@ export default function HomePage() {
               initial="initial"
               animate="animate"
             >
-              {/* Announcement Badge */}
+              {/* Announcement Badge - FIXED FOR MOBILE */}
               <motion.div
-                className="inline-flex items-center px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs sm:text-sm font-medium mb-4 sm:mb-6"
+                className="inline-flex items-center px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-sm font-medium mb-6 max-w-full"
                 variants={fadeInUp}
               >
-                <Zap className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                <span className="whitespace-nowrap">
-                  I've just launched our new location recommendation feature
+                <Zap className="h-4 w-4 mr-2 flex-shrink-0" />
+                <span className="hidden sm:inline">
+                  I&apos;ve just launched our new location recommendation
+                  feature
+                </span>
+                <span className="sm:hidden">
+                  New location feature launched!
                 </span>
               </motion.div>
 
