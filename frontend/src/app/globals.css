@@ -3,59 +3,40 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* STRONGER HORIZONTAL SCROLL FIX */
+/* HORIZONTAL SCROLL FIX - Add these rules */
 html {
-  overflow-x: hidden !important;
-  max-width: 100vw !important;
+  overflow-x: hidden;
 }
 
 body {
-  overflow-x: hidden !important;
-  max-width: 100vw !important;
-  position: relative;
+  overflow-x: hidden;
 }
 
-/* Force all elements to respect viewport width */
+/* Prevent any element from causing horizontal scroll */
 *,
 *::before,
 *::after {
-  max-width: 100vw !important;
-  box-sizing: border-box !important;
+  max-width: 100vw;
 }
 
-/* Specific fixes for common overflow causes */
+/* Fix for containers and main elements */
 .container,
 main,
 section,
 div,
 header,
-footer,
-nav,
-article,
-aside {
-  overflow-x: hidden !important;
-  max-width: 100% !important;
+footer {
+  overflow-x: hidden;
 }
 
-/* Fix for Next.js root elements */
+/* Additional specific fixes for horizontal scroll only */
+body,
+html {
+  overflow-x: hidden !important;
+}
+
 #__next {
   overflow-x: hidden !important;
-  max-width: 100vw !important;
-}
-
-/* Fix for any flex containers that might overflow */
-.flex {
-  overflow-x: hidden !important;
-}
-
-/* Fix for grid containers */
-.grid {
-  overflow-x: hidden !important;
-}
-
-/* Fix for absolute positioned elements */
-.absolute {
-  max-width: 100vw !important;
 }
 
 /* Only fix horizontal scrolling without changing layout */
