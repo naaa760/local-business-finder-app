@@ -105,15 +105,3 @@ LocalFinder is a modern, location-based business discovery application that help
    - Respond to reviews
    - Update business information
 
-## 📁 Project Structure
-
-localfinder/
-├── frontend/ # Next.js frontend application
-│ ├── public/ # Static assets
-│ │ └── og-image.jpg
-│ ├── src/ # Source code
-│ │ ├── app/ # Next.js app router
-│ │ ├── components/ # Reusable UI components
-│ │ ├── utils
-│ │ └── ...
-│ └── ...
