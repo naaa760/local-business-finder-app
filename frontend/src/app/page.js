@@ -135,13 +135,12 @@ export default function HomePage() {
             className="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${image})`,
-              opacity: index === currentImageIndex ? 0.4 : 0,
+              opacity: index === currentImageIndex ? 0.15 : 0,
             }}
           />
         ))}
-        {/* Enhanced overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 via-transparent to-amber-900/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-white/20 to-transparent" />
+        {/* Simplified overlay */}
+        <div className="absolute inset-0 bg-white/60" />
       </div>
 
       {/* Main content container */}
@@ -324,7 +323,7 @@ export default function HomePage() {
 
         {/* Enhanced Featured Places Section */}
         <section className="py-16 sm:py-20 lg:py-28 relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-white/50 to-amber-50/50 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-white" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -439,7 +438,7 @@ export default function HomePage() {
         </section>
 
         {/* How it works section */}
-        <section className="py-12 sm:py-16 lg:py-24 relative bg-gradient-to-b from-white to-amber-50/90 backdrop-blur-sm">
+        <section className="py-12 sm:py-16 lg:py-24 relative bg-gradient-to-b from-white to-amber-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 sm:mb-16">
               <span className="inline-block px-4 py-1 rounded-full bg-amber-100 text-amber-700 font-medium text-sm mb-3">
@@ -541,7 +540,7 @@ export default function HomePage() {
         </section>
 
         {/* Testimonials section */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-white/90 backdrop-blur-sm relative">
+        <section className="py-12 sm:py-16 lg:py-20 bg-white relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 sm:mb-16">
               <h2 className="text-base font-semibold text-amber-600 tracking-wide uppercase">
