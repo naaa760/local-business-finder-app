@@ -289,19 +289,6 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Map image - Hidden on mobile, smaller on tablet */}
-            <div className="hidden sm:flex justify-end mb-8">
-              <div className="transform rotate-3">
-                <Image
-                  src="/map.png"
-                  alt="Map"
-                  width={120}
-                  height={120}
-                  className="max-w-[80px] sm:max-w-[100px] opacity-80"
-                />
-              </div>
-            </div>
-
             <div className="relative">
               <div className="grid grid-cols-1 gap-8 sm:gap-12 md:grid-cols-3 relative">
                 {[
