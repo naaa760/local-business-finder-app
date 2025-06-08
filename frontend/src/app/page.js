@@ -135,7 +135,6 @@ export default function HomePage() {
             className="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${image})`,
-              opacity: index === currentImageIndex ? 0.7 : 0,
             }}
           />
         ))}
