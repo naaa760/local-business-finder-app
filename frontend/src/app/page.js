@@ -295,9 +295,9 @@ export default function HomePage() {
                 <Image
                   src="/map.png"
                   alt="Map"
-                  width={200}
-                  height={200}
-                  className="max-w-[120px] sm:max-w-[160px]"
+                  width={120}
+                  height={120}
+                  className="max-w-[80px] sm:max-w-[100px] opacity-80"
                 />
               </div>
             </div>
@@ -468,59 +468,18 @@ export default function HomePage() {
                 </motion.div>
               ))}
             </div>
-          </div>
-        </section>
 
-        {/* App preview section */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-amber-50/90 backdrop-blur-sm relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="md:flex items-center justify-between">
-              <div className="md:w-1/2 mb-8 sm:mb-12 md:mb-0 pr-0 md:pr-16">
-                <h2 className="text-base font-semibold text-amber-600 tracking-wide uppercase">
-                  Get The App
-                </h2>
-                <h3 className="mt-2 text-2xl sm:text-3xl md:text-4xl leading-8 font-bold tracking-tight text-gray-900">
-                  Take LocalFinder With You
-                </h3>
-                <p className="mt-4 text-lg sm:text-xl text-gray-500 max-w-2xl">
-                  This app is to discover local businesses wherever you go.
-                  Available for web for now.
-                </p>
-                <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-4">
-                  <button className="flex items-center justify-center px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors shadow-lg">
-                    <svg
-                      className="h-5 w-5 sm:h-6 sm:w-6 mr-2"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M17.5781 12.0096C17.5781 11.0175 17.0098 10.1279 16.1328 9.66895L7.01562 4.54098C6.55664 4.28809 6.02539 4.20606 5.51758 4.30274C5.00977 4.39941 4.56055 4.6709 4.2627 5.07324C3.95508 5.48047 3.82812 5.99316 3.91211 6.49609C3.99609 6.99902 4.28125 7.44336 4.69336 7.73633L12.2109 12L4.69336 16.2637C4.28125 16.5566 3.99609 17.001 3.91211 17.5039C3.82812 18.0068 3.95508 18.5195 4.2627 18.9268C4.56055 19.3291 5.00977 19.6006 5.51758 19.6973C6.02539 19.7939 6.55664 19.7119 7.01562 19.459L16.1328 14.3311C17.0098 13.8721 17.5781 12.9824 17.5781 12.0096Z" />
-                    </svg>
-                    Web App
-                  </button>
-                </div>
-              </div>
-
-              <div className="md:w-1/2 relative flex justify-center">
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  viewport={{ once: true }}
-                  className="relative w-20 h-[160px] sm:w-24 sm:h-[190px] lg:w-28 lg:h-[220px] bg-gray-900 rounded-[14px] sm:rounded-[16px] lg:rounded-[18px] border-[2px] sm:border-[2px] lg:border-[3px] border-gray-800 shadow-2xl overflow-hidden"
-                >
-                  <div className="absolute top-0 left-0 right-0 h-4 sm:h-6 bg-gray-800 rounded-t-lg sm:rounded-t-2xl"></div>
-                  <div className="h-full w-full overflow-hidden">
-                    <Image
-                      src="/app-preview.jpg"
-                      alt="Mobile App Preview"
-                      width={320}
-                      height={650}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div className="absolute bottom-1 sm:bottom-2 left-1/2 transform -translate-x-1/2 w-1/3 h-0.5 sm:h-1 bg-gray-700 rounded-full"></div>
-                </motion.div>
-              </div>
+            {/* Call to action */}
+            <div className="mt-12 sm:mt-16 text-center">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-full hover:shadow-lg transition duration-300 font-medium inline-flex items-center text-lg"
+                onClick={(e) => handleProtectedNavigation(e, "/map")}
+              >
+                Start Exploring LocalFinder
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </motion.button>
             </div>
           </div>
         </section>
