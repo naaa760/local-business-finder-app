@@ -140,7 +140,7 @@ export default function HomePage() {
           />
         ))}
         {/* Light overlay for text readability */}
-        <div className="absolute inset-0 bg-white/30" />
+        <div className="absolute inset-0 bg-black/10" />
       </div>
 
       {/* Main content container */}
