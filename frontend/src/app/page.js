@@ -135,12 +135,12 @@ export default function HomePage() {
             className="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${image})`,
-              opacity: index === currentImageIndex ? 0.15 : 0,
+              opacity: index === currentImageIndex ? 0.7 : 0,
             }}
           />
         ))}
-        {/* Simplified overlay */}
-        <div className="absolute inset-0 bg-white/60" />
+        {/* Light overlay for text readability */}
+        <div className="absolute inset-0 bg-white/30" />
       </div>
 
       {/* Main content container */}
