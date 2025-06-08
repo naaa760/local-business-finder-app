@@ -15,6 +15,10 @@ import {
   Filter,
   Building,
   Heart,
+  Sparkles,
+  Globe,
+  Users,
+  TrendingUp,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -68,8 +72,61 @@ export default function HomePage() {
     }
   };
 
+  // Floating elements animation variants
+  const floatingVariants = {
+    animate: {
+      y: [0, -10, 0],
+      rotate: [0, 5, 0],
+      transition: {
+        duration: 6,
+        ease: "easeInOut",
+        repeat: Infinity,
+      },
+    },
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-amber-50 overflow-x-hidden relative">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-amber-50 overflow-x-hidden relative">
+      {/* Animated background elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <motion.div
+          className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-amber-200/30 to-orange-300/30 rounded-full blur-xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-br from-blue-200/30 to-indigo-300/30 rounded-full blur-xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.4, 0.7, 0.4],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-40 left-1/4 w-20 h-20 bg-gradient-to-br from-pink-200/30 to-rose-300/30 rounded-full blur-xl"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.5, 0.2],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </div>
+
       {/* Fixed background slideshow */}
       <div className="fixed inset-0 w-full h-full z-0">
         {backgroundImages.map((image, index) => (
@@ -78,36 +135,40 @@ export default function HomePage() {
             className="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${image})`,
-              opacity: index === currentImageIndex ? 0.8 : 0,
+              opacity: index === currentImageIndex ? 0.4 : 0,
             }}
           />
         ))}
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/30" />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-900/10 to-amber-950/40" />
+        {/* Enhanced overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 via-transparent to-amber-900/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-white/20 to-transparent" />
       </div>
 
       {/* Main content container */}
       <div className="relative z-10 min-h-screen">
-        {/* Header */}
-        <header className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        {/* Enhanced Header */}
+        <header className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <div className="max-w-7xl mx-auto">
-            <div className="max-w-2xl mx-auto">
-              <div className="bg-white/15 backdrop-blur-md rounded-full border border-white/30 px-4 sm:px-6 py-3 sm:py-3 flex items-center justify-between w-full max-w-lg mx-auto">
-                <div className="flex items-center gap-1.5">
-                  <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-1 rounded-lg">
-                    <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+            <motion.div
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8 }}
+              className="max-w-4xl mx-auto"
+            >
+              <div className="bg-white/20 backdrop-blur-xl rounded-2xl border border-white/30 px-6 sm:px-8 py-4 flex items-center justify-between shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="bg-gradient-to-br from-amber-400 to-orange-500 text-white p-2 rounded-xl shadow-lg">
+                    <MapPin className="h-5 w-5" />
                   </div>
-                  <span className="text-base sm:text-lg font-bold bg-gradient-to-r from-amber-400 to-amber-600 text-transparent bg-clip-text">
+                  <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 text-transparent bg-clip-text">
                     LocalFinder
                   </span>
                 </div>
 
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center space-x-2">
                   <Link
                     href="/about"
-                    className="px-2 py-0.5 rounded-full text-white hover:bg-white/10 transition-colors text-xs"
+                    className="px-4 py-2 rounded-xl text-gray-700 hover:bg-white/20 transition-all duration-300 text-sm font-medium"
                   >
                     About
                   </Link>
@@ -117,14 +178,14 @@ export default function HomePage() {
                       <UserButton afterSignOutUrl="/" />
                     </div>
                   ) : (
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       <SignInButton mode="modal">
-                        <button className="px-2 py-0.5 rounded-full text-xs text-white hover:bg-white/10 transition-colors">
+                        <button className="px-4 py-2 rounded-xl text-sm text-gray-700 hover:bg-white/20 transition-all duration-300 font-medium">
                           Sign in
                         </button>
                       </SignInButton>
                       <SignUpButton mode="modal">
-                        <button className="px-2 py-0.5 bg-amber-500 hover:bg-amber-600 text-white rounded-full text-xs transition-colors">
+                        <button className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-sm transition-all duration-300 font-medium shadow-lg">
                           Get Started
                         </button>
                       </SignUpButton>
@@ -132,86 +193,177 @@ export default function HomePage() {
                   )}
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </header>
 
-        {/* Main content */}
+        {/* Enhanced Hero Section */}
         <main className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24">
           <div className="max-w-7xl mx-auto">
-            {/* Announcement banner */}
-            <div className="bg-white/15 backdrop-blur-md rounded-full px-4 sm:px-6 py-2 mb-8 sm:mb-12 flex items-center justify-center space-x-2 border border-white/30 w-fit mx-auto">
-              <div className="bg-amber-500 rounded-full p-0.5">
-                <Star className="h-2 w-2 sm:h-2.5 sm:w-2.5 text-white" />
-              </div>
-              <span className="text-xs text-white text-center">
-                I&apos;ve just launched our new location recommendation feature
-              </span>
-            </div>
-
-            {/* Hero section */}
+            {/* Floating announcement banner */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-center mb-12 sm:mb-16"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="mb-12"
             >
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 sm:mb-8 text-white px-4">
-                <span className="bg-gradient-to-r from-[#f5f5dc] to-[#5c4033] bg-clip-text text-transparent">
-                  Turning your time into{" "}
-                </span>
-                <span className="bg-gradient-to-r from-orange-400 via-yellow-300 to-yellow-500 bg-clip-text text-transparent">
-                  Finder App
-                </span>
-              </h1>
-
-              <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-4xl mx-auto mb-8 sm:mb-10 px-6 leading-relaxed">
-                Find the best local businesses, restaurants, and services in
-                your area with real reviews from real people.
-              </p>
-              <div className="flex flex-col items-center justify-center px-6">
-                <button
-                  onClick={(e) => handleProtectedNavigation(e, "/map")}
-                  className="px-8 sm:px-10 py-4 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-colors shadow-lg hover:shadow-xl w-full max-w-sm sm:w-auto text-lg font-medium"
+              <div className="bg-gradient-to-r from-amber-50/80 to-orange-50/80 backdrop-blur-xl rounded-2xl px-6 py-3 mb-8 sm:mb-12 flex items-center justify-center space-x-3 border border-amber-200/50 w-fit mx-auto shadow-lg">
+                <motion.div
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                  className="bg-gradient-to-r from-amber-400 to-orange-500 rounded-full p-1.5"
                 >
-                  Explore Map
-                </button>
+                  <Sparkles className="h-4 w-4 text-white" />
+                </motion.div>
+                <span className="text-sm font-medium bg-gradient-to-r from-amber-700 to-orange-700 text-transparent bg-clip-text">
+                  ✨ Discover amazing local businesses near you
+                </span>
               </div>
             </motion.div>
 
-            {/* Spacer - Reduced on mobile */}
-            <div className="py-12 sm:py-16 lg:py-32" />
+            {/* Enhanced Hero Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-center mb-16 sm:mb-20"
+            >
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 px-4">
+                <span className="block mb-2">
+                  <span className="bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 bg-clip-text text-transparent">
+                    Discover Local
+                  </span>
+                </span>
+                <span className="bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
+                  Treasures
+                </span>
+                <span className="block mt-2 text-2xl sm:text-3xl md:text-4xl lg:text-5xl bg-gradient-to-r from-gray-600 to-gray-500 bg-clip-text text-transparent">
+                  Around You
+                </span>
+              </h1>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto mb-10 px-6 leading-relaxed"
+              >
+                Connect with amazing local businesses, read authentic reviews,
+                and
+                <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent font-semibold">
+                  {" "}
+                  explore hidden gems
+                </span>{" "}
+                in your neighborhood
+              </motion.p>
+
+              {/* Enhanced CTA Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1 }}
+                className="flex flex-col sm:flex-row items-center justify-center gap-4 px-6 mb-12"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={(e) => handleProtectedNavigation(e, "/map")}
+                  className="group px-8 py-4 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white rounded-2xl transition-all duration-300 shadow-xl hover:shadow-2xl w-full sm:w-auto text-lg font-medium relative overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center justify-center">
+                    <Globe className="mr-2 h-5 w-5" />
+                    Explore Now
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </motion.button>
+              </motion.div>
+
+              {/* Stats Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="grid grid-cols-3 gap-8 max-w-2xl mx-auto"
+              >
+                {[
+                  {
+                    icon: <Building className="h-6 w-6" />,
+                    number: "1000+",
+                    label: "Businesses",
+                  },
+                  {
+                    icon: <Users className="h-6 w-6" />,
+                    number: "50K+",
+                    label: "Users",
+                  },
+                  {
+                    icon: <Star className="h-6 w-6" />,
+                    number: "25K+",
+                    label: "Reviews",
+                  },
+                ].map((stat, index) => (
+                  <motion.div
+                    key={index}
+                    whileHover={{ y: -5 }}
+                    className="text-center p-4 bg-white/30 backdrop-blur-xl rounded-2xl border border-white/40 shadow-lg"
+                  >
+                    <div className="text-amber-600 mb-2 flex justify-center">
+                      {stat.icon}
+                    </div>
+                    <div className="text-2xl font-bold text-gray-800">
+                      {stat.number}
+                    </div>
+                    <div className="text-sm text-gray-600">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
           </div>
         </main>
 
-        {/* Featured places section */}
-        <section className="py-12 sm:py-16 lg:py-24 relative bg-white/90 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12 sm:mb-16">
-              <span className="inline-block px-4 py-1 rounded-full bg-amber-100 text-amber-700 font-medium text-sm mb-3">
-                Discover Local Gems
+        {/* Enhanced Featured Places Section */}
+        <section className="py-16 sm:py-20 lg:py-28 relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-white/50 to-amber-50/50 backdrop-blur-sm" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <span className="inline-block px-6 py-2 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 text-amber-700 font-medium text-sm mb-4 border border-amber-200">
+                ✨ Handpicked Selection
               </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
-                Featured Places<span className="text-amber-500">.</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight mb-6">
+                Featured Local
+                <span className="block bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+                  Gems
+                </span>
               </h2>
-              <p className="mt-4 max-w-2xl text-lg sm:text-xl text-gray-600 mx-auto px-4">
-                Experience the best local businesses handpicked for quality and
-                exceptional service
+              <p className="text-lg sm:text-xl text-gray-600 mx-auto px-4 max-w-3xl">
+                Discover exceptional local businesses that our community loves
+                most
               </p>
-            </div>
+            </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {featuredPlaces.map((place, index) => (
                 <motion.div
                   key={place.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  whileHover={{
+                    y: -10,
+                    scale: 1.02,
+                    transition: { duration: 0.3 },
+                  }}
                   viewport={{ once: true }}
-                  className="group rounded-2xl overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-300 border border-amber-100"
+                  className="group bg-white/70 backdrop-blur-xl rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-white/50"
                 >
-                  <div className="h-48 overflow-hidden relative">
+                  <div className="h-56 overflow-hidden relative">
                     <Image
                       src={place.image}
                       alt={place.title}
@@ -219,24 +371,24 @@ export default function HomePage() {
                       height={300}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div className="absolute bottom-0 left-0 p-4 w-full">
-                      <div className="flex justify-between items-center">
-                        <span className="bg-amber-500/90 text-white px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm">
-                          Most Popular
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute top-4 left-4">
+                      <span className="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg backdrop-blur-sm">
+                        ⭐ Featured
+                      </span>
+                    </div>
+                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="flex items-center gap-1 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                        <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                        <span className="text-sm font-medium">
+                          {place.rating}
                         </span>
-                        <div className="flex items-center gap-1 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg">
-                          <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
-                          <span className="text-xs font-medium">
-                            {place.rating} ({place.reviews})
-                          </span>
-                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-5">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-amber-600 transition-colors">
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-amber-600 transition-colors">
                       {place.title}
                     </h3>
                     <p className="text-gray-600 mb-4 line-clamp-2">
@@ -245,115 +397,177 @@ export default function HomePage() {
 
                     <div className="flex justify-between items-center">
                       <Link href={`/business/${place.id}`}>
-                        <span className="inline-flex items-center text-amber-600 font-medium hover:text-amber-700 text-sm">
-                          View Details
+                        <motion.span
+                          whileHover={{ x: 5 }}
+                          className="inline-flex items-center text-amber-600 font-medium hover:text-amber-700 text-sm"
+                        >
+                          Explore
                           <ArrowRight className="ml-1 h-4 w-4" />
-                        </span>
+                        </motion.span>
                       </Link>
-                      <button className="p-2 rounded-full bg-amber-50 text-amber-600 hover:bg-amber-100 transition-colors">
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="p-2.5 rounded-full bg-gradient-to-r from-amber-50 to-orange-50 text-amber-600 hover:from-amber-100 hover:to-orange-100 transition-all duration-300 border border-amber-200"
+                      >
                         <Heart className="h-4 w-4" />
-                      </button>
+                      </motion.button>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </div>
 
-            <div className="text-center">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-full hover:shadow-lg transition duration-300 font-medium inline-flex items-center"
+                className="px-8 py-4 bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-2xl hover:shadow-xl transition-all duration-300 font-medium inline-flex items-center"
                 onClick={(e) => handleProtectedNavigation(e, "/map")}
               >
-                Explore All Places
-                <ArrowUpRight className="ml-2 h-4 w-4" />
+                View All Places
+                <ArrowUpRight className="ml-2 h-5 w-5" />
               </motion.button>
-            </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* How it works section */}
-        <section className="py-12 sm:py-16 lg:py-24 relative bg-gradient-to-b from-white to-amber-50/90 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12 sm:mb-16">
-              <span className="inline-block px-4 py-1 rounded-full bg-amber-100 text-amber-700 font-medium text-sm mb-3">
-                Simple Process
+        {/* Enhanced How it works section */}
+        <section className="py-16 sm:py-20 lg:py-28 relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-indigo-50/50 via-white/80 to-amber-50/50 backdrop-blur-sm" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <span className="inline-block px-6 py-2 rounded-full bg-gradient-to-r from-indigo-100 to-blue-100 text-indigo-700 font-medium text-sm mb-4 border border-indigo-200">
+                🚀 Simple Process
               </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
-                How LocalFinder Works<span className="text-amber-500">.</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight mb-6">
+                How LocalFinder
+                <span className="block bg-gradient-to-r from-indigo-500 to-blue-600 bg-clip-text text-transparent">
+                  Works
+                </span>
               </h2>
-              <p className="mt-4 max-w-2xl text-lg sm:text-xl text-gray-600 mx-auto px-4">
-                Find, discover, and connect with local businesses in just three
-                simple steps
+              <p className="text-lg sm:text-xl text-gray-600 mx-auto px-4 max-w-3xl">
+                Discover amazing local businesses in just three simple steps
               </p>
-            </div>
+            </motion.div>
 
             <div className="relative">
               <div className="grid grid-cols-1 gap-8 sm:gap-12 md:grid-cols-3 relative">
                 {[
                   {
                     step: 1,
-                    icon: <MapPin className="h-6 w-6 sm:h-8 sm:w-8" />,
+                    icon: <MapPin className="h-8 w-8" />,
                     title: "Share Your Location",
                     description:
                       "Allow the app to use your location or search for an area you're interested in exploring",
+                    gradient: "from-blue-500 to-indigo-600",
+                    bgGradient: "from-blue-50 to-indigo-50",
+                    borderColor: "border-blue-200",
                   },
                   {
                     step: 2,
-                    icon: <Filter className="h-6 w-6 sm:h-8 sm:w-8" />,
-                    title: "Apply Filters",
+                    icon: <Filter className="h-8 w-8" />,
+                    title: "Apply Smart Filters",
                     description:
-                      "Filter by category, rating, or distance to find exactly what you're looking for",
+                      "Use our intelligent filtering system to find exactly what you're looking for with precision",
+                    gradient: "from-amber-500 to-orange-600",
+                    bgGradient: "from-amber-50 to-orange-50",
+                    borderColor: "border-amber-200",
                   },
                   {
                     step: 3,
-                    icon: <Star className="h-6 w-6 sm:h-8 sm:w-8" />,
-                    title: "Discover & Review",
+                    icon: <Star className="h-8 w-8" />,
+                    title: "Discover & Connect",
                     description:
-                      "Explore businesses, read reviews, and share your own experiences with the community",
+                      "Explore amazing businesses, read authentic reviews, and share your own experiences",
+                    gradient: "from-emerald-500 to-teal-600",
+                    bgGradient: "from-emerald-50 to-teal-50",
+                    borderColor: "border-emerald-200",
                   },
                 ].map((item, index) => (
                   <motion.div
                     key={item.step}
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.2 }}
+                    transition={{ duration: 0.8, delay: index * 0.2 }}
+                    whileHover={{
+                      y: -10,
+                      scale: 1.02,
+                      transition: { duration: 0.3 },
+                    }}
                     viewport={{ once: true }}
-                    className="relative"
+                    className="relative group"
                   >
-                    <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-amber-100 hover:shadow-2xl hover:border-amber-200 transition-all duration-300 relative">
-                      <div className="pt-4 sm:pt-6 p-4 sm:p-6 text-center">
-                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-lg mx-auto mb-4">
+                    {/* Connecting line */}
+                    {index < 2 && (
+                      <div className="hidden md:block absolute top-1/2 -right-6 w-12 h-0.5 bg-gradient-to-r from-gray-300 to-gray-200 transform -translate-y-1/2 z-10">
+                        <motion.div
+                          className="w-full h-full bg-gradient-to-r from-amber-400 to-orange-500"
+                          initial={{ scaleX: 0 }}
+                          whileInView={{ scaleX: 1 }}
+                          transition={{ duration: 1, delay: index * 0.3 + 0.5 }}
+                          viewport={{ once: true }}
+                        />
+                      </div>
+                    )}
+
+                    <div
+                      className={`bg-gradient-to-br ${item.bgGradient} backdrop-blur-xl rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 border ${item.borderColor} relative overflow-hidden`}
+                    >
+                      {/* Floating decoration */}
+                      <motion.div
+                        className="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-white/40 to-white/10 rounded-full blur-xl"
+                        animate={floatingVariants.animate}
+                        transition={{ delay: index * 0.5 }}
+                      />
+
+                      <div className="p-8 text-center relative z-10">
+                        {/* Step number */}
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                          className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white font-bold text-2xl shadow-xl mx-auto mb-6 relative`}
+                        >
                           {item.step}
-                        </div>
-                        <div className="rounded-xl bg-amber-100 p-3 sm:p-4 inline-flex items-center justify-center mb-4 sm:mb-6 text-amber-600">
+                          <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </motion.div>
+
+                        {/* Icon */}
+                        <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          className={`rounded-2xl bg-gradient-to-br ${item.bgGradient} p-4 inline-flex items-center justify-center mb-6 text-gray-700 border ${item.borderColor} shadow-lg`}
+                        >
                           {item.icon}
-                        </div>
-                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">
+                        </motion.div>
+
+                        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
                           {item.title}
                         </h3>
-                        <p className="text-gray-600 text-sm sm:text-base">
+                        <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
                           {item.description}
                         </p>
                       </div>
 
-                      <div className="bg-gradient-to-r from-amber-500/5 to-amber-500/10 p-3 sm:p-4 text-center">
-                        {index === 0 && (
-                          <span className="text-amber-700 text-xs sm:text-sm font-medium">
-                            Start Here
-                          </span>
-                        )}
-                        {index === 2 && (
-                          <span className="text-amber-700 text-xs sm:text-sm font-medium">
-                            Enjoy!
-                          </span>
-                        )}
-                        {index === 1 && (
-                          <span className="text-amber-700 text-xs sm:text-sm font-medium">
-                            Customize Your Search
-                          </span>
-                        )}
+                      {/* Bottom accent */}
+                      <div
+                        className={`bg-gradient-to-r ${item.gradient} p-4 text-center`}
+                      >
+                        <span className="text-white text-sm font-medium">
+                          {index === 0 && "🎯 Start Here"}
+                          {index === 1 && "⚡ Customize"}
+                          {index === 2 && "🌟 Explore!"}
+                        </span>
                       </div>
                     </div>
                   </motion.div>
@@ -361,36 +575,57 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="mt-12 sm:mt-16 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              viewport={{ once: true }}
+              className="mt-16 text-center"
+            >
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition duration-300 font-medium inline-flex items-center"
+                className="group px-8 py-4 bg-gradient-to-r from-indigo-600 to-blue-700 text-white rounded-2xl hover:shadow-xl transition-all duration-300 font-medium inline-flex items-center relative overflow-hidden"
                 onClick={(e) => handleProtectedNavigation(e, "/map")}
               >
-                Get Started Now
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <span className="relative z-10 flex items-center">
+                  <TrendingUp className="mr-2 h-5 w-5" />
+                  Get Started Now
+                  <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-700 to-blue-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </motion.button>
-            </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* Testimonials section */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-white/90 backdrop-blur-sm relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12 sm:mb-16">
-              <h2 className="text-base font-semibold text-amber-600 tracking-wide uppercase">
-                What People Say
+        {/* Enhanced Testimonials section */}
+        <section className="py-16 sm:py-20 lg:py-28 relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-50/80 via-white/90 to-gray-50/80 backdrop-blur-sm" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <span className="inline-block px-6 py-2 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-medium text-sm mb-4 border border-purple-200">
+                💬 What People Say
+              </span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight mb-6">
+                Loved by
+                <span className="block bg-gradient-to-r from-purple-500 to-pink-600 bg-clip-text text-transparent">
+                  Our Community
+                </span>
               </h2>
-              <h3 className="mt-2 text-2xl sm:text-3xl md:text-4xl leading-8 font-bold tracking-tight text-gray-900">
-                Testimonials from Our Users
-              </h3>
-              <p className="mt-4 max-w-2xl text-lg sm:text-xl text-gray-500 mx-auto px-4">
+              <p className="text-lg sm:text-xl text-gray-600 mx-auto px-4 max-w-3xl">
                 See how LocalFinder is helping people discover amazing places
+                and grow their businesses
               </p>
-            </div>
+            </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
                 {
                   name: "Sarah Johnson",
@@ -398,6 +633,8 @@ export default function HomePage() {
                   role: "Food Blogger",
                   content:
                     "LocalFinder has completely changed how I discover new restaurants. The filtering options are perfect, and I love how I can see ratings at a glance!",
+                  gradient: "from-rose-50 to-pink-50",
+                  accent: "from-rose-400 to-pink-500",
                 },
                 {
                   name: "Michael Chen",
@@ -405,6 +642,8 @@ export default function HomePage() {
                   role: "Business Traveler",
                   content:
                     "As someone who travels frequently, this app has been a lifesaver. I can quickly find healthcare services or great restaurants no matter where I am.",
+                  gradient: "from-blue-50 to-indigo-50",
+                  accent: "from-blue-400 to-indigo-500",
                 },
                 {
                   name: "Emily Rodriguez",
@@ -412,97 +651,173 @@ export default function HomePage() {
                   role: "Shop Owner",
                   content:
                     "The business dashboard has helped me connect with so many new customers. The analytics insights are incredibly valuable for my small business.",
+                  gradient: "from-emerald-50 to-teal-50",
+                  accent: "from-emerald-400 to-teal-500",
                 },
               ].map((testimonial, index) => (
                 <motion.div
                   key={testimonial.name}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.2 }}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  whileHover={{
+                    y: -8,
+                    scale: 1.02,
+                    transition: { duration: 0.3 },
+                  }}
                   viewport={{ once: true }}
-                  className="bg-white p-4 sm:p-6 rounded-xl shadow-soft border border-gray-100"
+                  className={`bg-gradient-to-br ${testimonial.gradient} backdrop-blur-xl p-8 rounded-3xl shadow-xl hover:shadow-2xl border border-white/50 transition-all duration-500 relative overflow-hidden`}
                 >
-                  <div className="flex items-center mb-4">
-                    <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden mr-4">
-                      <Image
-                        src={testimonial.avatar}
-                        alt={testimonial.name}
-                        width={48}
-                        height={48}
-                        className="h-full w-full object-cover"
-                      />
+                  {/* Floating accent */}
+                  <motion.div
+                    className={`absolute -top-1 -right-1 w-20 h-20 bg-gradient-to-br ${testimonial.accent} opacity-10 rounded-full blur-2xl`}
+                    animate={floatingVariants.animate}
+                    transition={{ delay: index * 0.3 }}
+                  />
+
+                  <div className="relative z-10">
+                    <div className="flex items-center mb-6">
+                      <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        className="h-14 w-14 rounded-2xl overflow-hidden mr-4 shadow-lg border-2 border-white"
+                      >
+                        <Image
+                          src={testimonial.avatar}
+                          alt={testimonial.name}
+                          width={56}
+                          height={56}
+                          className="h-full w-full object-cover"
+                        />
+                      </motion.div>
+                      <div>
+                        <h4 className="font-bold text-gray-900 text-lg">
+                          {testimonial.name}
+                        </h4>
+                        <p className="text-sm text-gray-600 font-medium">
+                          {testimonial.role}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900 text-sm sm:text-base">
-                        {testimonial.name}
-                      </h4>
-                      <p className="text-xs sm:text-sm text-gray-500">
-                        {testimonial.role}
-                      </p>
+
+                    <div className="mb-4 flex">
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, scale: 0 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          transition={{
+                            duration: 0.3,
+                            delay: index * 0.2 + i * 0.1,
+                          }}
+                          viewport={{ once: true }}
+                        >
+                          <Star className="h-5 w-5 fill-amber-400 text-amber-400 mr-1" />
+                        </motion.div>
+                      ))}
                     </div>
+
+                    <p className="text-gray-700 text-base leading-relaxed italic">
+                      &ldquo;{testimonial.content}&rdquo;
+                    </p>
                   </div>
-                  <div className="mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="inline-block h-3 w-3 sm:h-4 sm:w-4 fill-amber-400 text-amber-400 mr-1"
-                      />
-                    ))}
-                  </div>
-                  <p className="text-gray-600 text-sm sm:text-base">
-                    {testimonial.content}
-                  </p>
                 </motion.div>
               ))}
             </div>
 
-            {/* Call to action */}
-            <div className="mt-12 sm:mt-16 text-center">
+            {/* Enhanced final CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              viewport={{ once: true }}
+              className="mt-16 text-center"
+            >
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-full hover:shadow-lg transition duration-300 font-medium inline-flex items-center text-lg"
+                className="group px-10 py-5 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white rounded-3xl hover:shadow-2xl transition-all duration-300 font-bold text-xl inline-flex items-center relative overflow-hidden"
                 onClick={(e) => handleProtectedNavigation(e, "/map")}
               >
-                Start Exploring LocalFinder
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <span className="relative z-10 flex items-center">
+                  <Sparkles className="mr-3 h-6 w-6" />
+                  Start Your Local Adventure
+                  <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform" />
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </motion.button>
-            </div>
+            </motion.div>
           </div>
         </section>
       </div>
 
-      {/* Authentication Modal */}
+      {/* Enhanced Authentication Modal */}
       {showAuthModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
-              Sign In Required
-            </h3>
-            <p className="text-gray-600 mb-6 text-sm sm:text-base">
-              Please sign in or create an account to access the map and discover
-              local businesses.
-            </p>
-            <div className="flex flex-col gap-3 sm:gap-4 mt-6">
-              <SignInButton mode="modal">
-                <button className="w-full px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-medium">
-                  Sign In
-                </button>
-              </SignInButton>
-              <SignUpButton mode="modal">
-                <button className="w-full px-6 py-3 border border-gray-300 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
-                  Create Account
-                </button>
-              </SignUpButton>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="bg-white/90 backdrop-blur-xl rounded-3xl p-8 max-w-md w-full shadow-2xl border border-white/50 relative overflow-hidden"
+          >
+            {/* Decorative elements */}
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-amber-200/30 to-orange-300/30 rounded-full blur-xl" />
+            <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-br from-blue-200/30 to-indigo-300/30 rounded-full blur-xl" />
+
+            <div className="relative z-10">
+              <div className="text-center mb-6">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+                >
+                  <MapPin className="h-8 w-8 text-white" />
+                </motion.div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                  Welcome to LocalFinder
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Sign in to discover amazing local businesses and connect with
+                  your community
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <SignInButton mode="modal">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full px-6 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 font-medium shadow-lg"
+                  >
+                    Sign In
+                  </motion.button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full px-6 py-4 border-2 border-gray-200 bg-white/50 text-gray-700 rounded-2xl hover:bg-white/80 hover:border-gray-300 transition-all duration-300 font-medium"
+                  >
+                    Create Account
+                  </motion.button>
+                </SignUpButton>
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                onClick={() => setShowAuthModal(false)}
+                className="mt-6 text-gray-500 hover:text-gray-700 text-sm w-full py-2 transition-colors"
+              >
+                Maybe later
+              </motion.button>
             </div>
-            <button
-              onClick={() => setShowAuthModal(false)}
-              className="mt-4 text-gray-500 hover:text-gray-700 text-sm w-full"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
     </div>
   );
