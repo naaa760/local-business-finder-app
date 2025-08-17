@@ -1,6 +1,7 @@
 # 🌎 LocalFinder: Discover Local Businesses
 
-![LocalFinder Banner](public/og-image.jpg)
+![Uploading image.png…]()
+
 
 ## 📌 Overview
 
