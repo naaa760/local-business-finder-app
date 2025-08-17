@@ -1,6 +1,7 @@
 # 🌎 LocalFinder: Discover Local Businesses
 
-![Uploading image.png…]()
+<img width="1362" height="611" alt="image" src="https://github.com/user-attachments/assets/7d95327b-f72d-481a-92bb-2370c1bcf29c" />
+
 
 
 ## 📌 Overview
